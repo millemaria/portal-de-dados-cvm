@@ -1,0 +1,71 @@
+-- Databricks SQL: Create catalog and schemas for Portal CVM
+-- Run this in Databricks SQL Editor to initialize the data structure.
+
+-- Create catalog (Unity Catalog)
+-- CREATE CATALOG IF NOT EXISTS portal_cvm;
+-- USE CATALOG portal_cvm;
+
+-- Create schemas for each layer
+-- CREATE SCHEMA IF NOT EXISTS bronze;
+-- CREATE SCHEMA IF NOT EXISTS silver;
+-- CREATE SCHEMA IF NOT EXISTS gold;
+
+-- ============================================
+-- Gold Layer Tables (consumed by the API)
+-- ============================================
+
+-- Company Summary
+-- CREATE TABLE IF NOT EXISTS gold.company_summary (
+--   cd_cvm STRING,
+--   cnpj STRING,
+--   company_name STRING,
+--   ticker STRING,
+--   sector STRING,
+--   sub_sector STRING,
+--   segment STRING,
+--   status STRING,
+--   latest_reference_date DATE,
+--   total_assets DOUBLE,
+--   total_equity DOUBLE,
+--   net_revenue DOUBLE,
+--   net_income DOUBLE,
+--   currency_scale STRING
+-- ) USING DELTA;
+
+-- Financial Indicators
+-- CREATE TABLE IF NOT EXISTS gold.financial_indicators (
+--   cd_cvm STRING,
+--   ticker STRING,
+--   reference_date DATE,
+--   roe DOUBLE,
+--   roa DOUBLE,
+--   net_margin DOUBLE,
+--   gross_margin DOUBLE,
+--   ebitda_margin DOUBLE,
+--   current_ratio DOUBLE,
+--   debt_to_equity DOUBLE,
+--   total_assets DOUBLE,
+--   total_equity DOUBLE,
+--   net_revenue DOUBLE,
+--   net_income DOUBLE,
+--   ebitda DOUBLE,
+--   currency_scale STRING
+-- ) USING DELTA;
+
+-- Revenue History
+-- CREATE TABLE IF NOT EXISTS gold.revenue_history (
+--   cd_cvm STRING,
+--   ticker STRING,
+--   reference_date DATE,
+--   net_revenue DOUBLE,
+--   currency_scale STRING
+-- ) USING DELTA;
+
+-- Net Income History
+-- CREATE TABLE IF NOT EXISTS gold.net_income_history (
+--   cd_cvm STRING,
+--   ticker STRING,
+--   reference_date DATE,
+--   net_income DOUBLE,
+--   currency_scale STRING
+-- ) USING DELTA;
