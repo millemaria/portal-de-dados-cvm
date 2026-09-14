@@ -1,24 +1,24 @@
 export function Footer() {
   return (
-    <footer className="border-t border-[var(--color-border)] bg-[var(--color-surface)]/50 mt-auto">
-      <div className="mx-auto max-w-7xl px-3 py-6 sm:px-6 sm:py-8 lg:px-8">
+    <footer className="border-t border-slate-800/80 bg-slate-950/60 mt-auto w-full">
+      <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8 w-full">
         <div className="flex flex-col items-center gap-3 sm:gap-4 sm:flex-row sm:justify-between text-center sm:text-left">
-          <div className="text-xs sm:text-sm text-[var(--color-text-muted)]">
+          <div className="text-xs sm:text-sm text-slate-400 font-medium">
             <p>
-              Dados públicos extraídos do{" "}
+              Dados públicos extraídos diretamente do{" "}
               <a
                 href="https://dados.cvm.gov.br/"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-[var(--color-primary)] hover:text-[var(--color-primary-hover)] transition-colors underline underline-offset-2"
+                className="text-cyan-400 hover:text-cyan-300 transition-colors font-semibold underline underline-offset-4"
               >
                 Portal de Dados Abertos da CVM
               </a>
             </p>
           </div>
-          <div className="text-[11px] sm:text-xs text-[var(--color-text-muted)]">
+          <div className="text-[11px] sm:text-xs text-slate-400">
             <p>
-              Este portal não constitui recomendação de investimento.
+              Projeto open source para fins educacionais e de pesquisa financeira.
             </p>
           </div>
         </div>

@@ -47,68 +47,76 @@ export function HistoryChart({
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 20 }}
+      initial={{ opacity: 0, y: 15 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.4 }}
-      className="glass-card p-3.5 sm:p-5 min-w-0"
+      transition={{ duration: 0.3 }}
+      className="glass-card p-4 sm:p-6 min-w-0 border border-slate-800/90 rounded-2xl"
     >
-      <h3 className="text-xs sm:text-sm font-semibold text-[var(--color-text-primary)] mb-3 sm:mb-4">
-        {title}
-      </h3>
+      <div className="flex items-center justify-between mb-4 sm:mb-6">
+        <h3 className="text-sm sm:text-base font-bold text-white truncate">
+          {title}
+        </h3>
+        <span
+          className="w-2.5 h-2.5 rounded-full"
+          style={{ backgroundColor: color }}
+        />
+      </div>
 
-      <div className="h-48 sm:h-56 lg:h-60 w-full">
+      <div className="h-56 sm:h-64 lg:h-72 w-full">
         {mounted ? (
           <ResponsiveContainer width="100%" height="100%">
-          <AreaChart data={chartData} margin={{ top: 5, right: 10, left: -15, bottom: 0 }}>
-            <defs>
-              <linearGradient id={gradientId} x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor={color} stopOpacity={0.3} />
-                <stop offset="95%" stopColor={color} stopOpacity={0} />
-              </linearGradient>
-            </defs>
-            <CartesianGrid strokeDasharray="3 3" stroke="rgba(30,41,59,0.5)" />
-            <XAxis
-              dataKey="year"
-              tick={{ fill: "#64748b", fontSize: 11 }}
-              axisLine={{ stroke: "#1e293b" }}
-              tickLine={false}
-            />
-            <YAxis
-              tick={{ fill: "#64748b", fontSize: 10 }}
-              axisLine={false}
-              tickLine={false}
-              tickFormatter={(v: number) =>
-                formatCurrencyWithSuffix(v, "MIL")
-              }
-              width={65}
-            />
-            <Tooltip
-              contentStyle={{
-                background: "rgba(17, 24, 39, 0.95)",
-                border: "1px solid #1e293b",
-                borderRadius: "8px",
-                color: "#f1f5f9",
-                fontSize: "12px",
-              }}
-              formatter={(value: number) => [
-                formatCurrencyWithSuffix(value, "MIL"),
-                title,
-              ]}
-              labelStyle={{ color: "#94a3b8" }}
-            />
-            <Area
-              type="monotone"
-              dataKey="value"
-              stroke={color}
-              strokeWidth={2}
-              fill={`url(#${gradientId})`}
-              dot={{ fill: color, r: 2.5, strokeWidth: 0 }}
-              activeDot={{ r: 4.5, stroke: color, strokeWidth: 2, fill: "#111827" }}
-            />
-          </AreaChart>
-        </ResponsiveContainer>
+            <AreaChart data={chartData} margin={{ top: 10, right: 10, left: -10, bottom: 0 }}>
+              <defs>
+                <linearGradient id={gradientId} x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="5%" stopColor={color} stopOpacity={0.35} />
+                  <stop offset="95%" stopColor={color} stopOpacity={0.0} />
+                </linearGradient>
+              </defs>
+              <CartesianGrid strokeDasharray="3 3" stroke="rgba(51, 65, 85, 0.4)" vertical={false} />
+              <XAxis
+                dataKey="year"
+                tick={{ fill: "#94a3b8", fontSize: 12, fontWeight: 500 }}
+                axisLine={{ stroke: "#334155" }}
+                tickLine={false}
+              />
+              <YAxis
+                tick={{ fill: "#94a3b8", fontSize: 11 }}
+                axisLine={false}
+                tickLine={false}
+                tickFormatter={(v: number) =>
+                  formatCurrencyWithSuffix(v, "MIL")
+                }
+                width={70}
+              />
+              <Tooltip
+                contentStyle={{
+                  background: "rgba(15, 23, 42, 0.95)",
+                  border: "1px solid rgba(51, 65, 85, 0.8)",
+                  borderRadius: "12px",
+                  boxShadow: "0 10px 25px -5px rgba(0, 0, 0, 0.5)",
+                  color: "#f8fafc",
+                  fontSize: "12px",
+                  padding: "8px 12px",
+                }}
+                formatter={(value: number) => [
+                  formatCurrencyWithSuffix(value, "MIL"),
+                  title,
+                ]}
+                labelStyle={{ color: "#94a3b8", fontWeight: 600, marginBottom: "4px" }}
+              />
+              <Area
+                type="monotone"
+                dataKey="value"
+                stroke={color}
+                strokeWidth={2.5}
+                fill={`url(#${gradientId})`}
+                dot={{ fill: color, r: 3, strokeWidth: 0 }}
+                activeDot={{ r: 5, stroke: color, strokeWidth: 2, fill: "#0f172a" }}
+              />
+            </AreaChart>
+          </ResponsiveContainer>
         ) : (
-          <div className="h-full w-full skeleton rounded-lg" />
+          <div className="h-full w-full skeleton rounded-xl" />
         )}
       </div>
     </motion.div>

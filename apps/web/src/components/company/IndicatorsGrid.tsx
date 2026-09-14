@@ -8,6 +8,8 @@ import {
   Percent,
   DollarSign,
   BarChart3,
+  Scale,
+  ShieldCheck,
 } from "lucide-react";
 import type { FinancialIndicator } from "@portal-cvm/types";
 import { formatPercent, formatRatio, formatCurrencyWithSuffix } from "@/lib/formatters";
@@ -24,20 +26,22 @@ export function IndicatorsGrid({ indicators }: IndicatorsGridProps) {
 
   const cards = [
     {
-      label: "ROE",
+      label: "ROE (Retorno s/ PL)",
       value: formatPercent(latest.roe),
       raw: latest.roe,
       prev: previous?.roe,
       icon: Percent,
-      color: "primary",
+      color: "text-cyan-400",
+      bg: "bg-cyan-500/10 border-cyan-500/20",
     },
     {
-      label: "ROA",
+      label: "ROA (Retorno s/ Ativo)",
       value: formatPercent(latest.roa),
       raw: latest.roa,
       prev: previous?.roa,
       icon: Percent,
-      color: "secondary",
+      color: "text-purple-400",
+      bg: "bg-purple-500/10 border-purple-500/20",
     },
     {
       label: "Margem Líquida",
@@ -45,7 +49,8 @@ export function IndicatorsGrid({ indicators }: IndicatorsGridProps) {
       raw: latest.netMargin,
       prev: previous?.netMargin,
       icon: BarChart3,
-      color: "accent",
+      color: "text-emerald-400",
+      bg: "bg-emerald-500/10 border-emerald-500/20",
     },
     {
       label: "Margem Bruta",
@@ -53,7 +58,8 @@ export function IndicatorsGrid({ indicators }: IndicatorsGridProps) {
       raw: latest.grossMargin,
       prev: previous?.grossMargin,
       icon: BarChart3,
-      color: "primary",
+      color: "text-cyan-400",
+      bg: "bg-cyan-500/10 border-cyan-500/20",
     },
     {
       label: "Margem EBITDA",
@@ -61,62 +67,64 @@ export function IndicatorsGrid({ indicators }: IndicatorsGridProps) {
       raw: latest.ebitdaMargin,
       prev: previous?.ebitdaMargin,
       icon: TrendingUp,
-      color: "secondary",
+      color: "text-purple-400",
+      bg: "bg-purple-500/10 border-purple-500/20",
     },
     {
       label: "Liquidez Corrente",
       value: formatRatio(latest.currentRatio),
       raw: latest.currentRatio,
       prev: previous?.currentRatio,
-      icon: DollarSign,
-      color: "accent",
+      icon: ShieldCheck,
+      color: "text-emerald-400",
+      bg: "bg-emerald-500/10 border-emerald-500/20",
     },
     {
-      label: "Dívida/PL",
+      label: "Dívida Líquida / PL",
       value: formatRatio(latest.debtToEquity),
       raw: latest.debtToEquity,
       prev: previous?.debtToEquity,
-      icon: BarChart3,
-      color: "warning",
+      icon: Scale,
+      color: "text-amber-400",
+      bg: "bg-amber-500/10 border-amber-500/20",
       invertTrend: true,
     },
     {
-      label: "EBITDA",
+      label: "EBITDA Anual",
       value: formatCurrencyWithSuffix(latest.ebitda, latest.currencyScale),
       raw: latest.ebitda,
       prev: previous?.ebitda,
       icon: DollarSign,
-      color: "primary",
+      color: "text-cyan-400",
+      bg: "bg-cyan-500/10 border-cyan-500/20",
     },
   ];
 
   return (
-    <div className="grid grid-cols-2 min-[540px]:grid-cols-3 lg:grid-cols-4 gap-2.5 sm:gap-3.5">
+    <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 lg:gap-5">
       {cards.map((card, i) => {
         const trend = getTrend(card.raw, card.prev, card.invertTrend);
-        const colorVar = `var(--color-${card.color})`;
 
         return (
           <motion.div
             key={card.label}
             initial={{ opacity: 0, y: 15 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.3, delay: i * 0.05 }}
-            className="glass-card p-3 sm:p-4 group min-w-0 flex flex-col justify-between"
+            transition={{ duration: 0.3, delay: i * 0.03 }}
+            className="glass-card p-4 sm:p-5 group min-w-0 flex flex-col justify-between border border-slate-800/90 bg-slate-900/80 hover:bg-slate-900 hover:border-cyan-500/50 transition-all rounded-2xl"
           >
-            <div className="flex items-center justify-between mb-2">
-              <card.icon
-                className="h-3.5 w-3.5 sm:h-4 sm:w-4 shrink-0"
-                style={{ color: colorVar }}
-              />
+            <div className="flex items-center justify-between mb-3">
+              <div className={`p-2.5 rounded-xl border ${card.bg}`}>
+                <card.icon className={`h-4 w-4 shrink-0 ${card.color}`} />
+              </div>
               {trend && (
                 <span
-                  className={`flex items-center text-[10px] sm:text-xs shrink-0 ${
+                  className={`inline-flex items-center gap-1 text-xs font-semibold px-2 py-0.5 rounded-full shrink-0 ${
                     trend === "up"
-                      ? "text-[var(--color-accent)]"
+                      ? "text-emerald-400 bg-emerald-500/10 border border-emerald-500/25"
                       : trend === "down"
-                        ? "text-[var(--color-danger)]"
-                        : "text-[var(--color-text-muted)]"
+                        ? "text-rose-400 bg-rose-500/10 border border-rose-500/25"
+                        : "text-slate-400 bg-slate-800 border border-slate-700"
                   }`}
                 >
                   {trend === "up" ? (
@@ -126,18 +134,19 @@ export function IndicatorsGrid({ indicators }: IndicatorsGridProps) {
                   ) : (
                     <Minus className="h-3 w-3" />
                   )}
+                  <span>{trend === "up" ? "Alta" : trend === "down" ? "Queda" : "Estável"}</span>
                 </span>
               )}
             </div>
             <div>
               <p
-                className="text-[11px] sm:text-xs text-[var(--color-text-muted)] mb-0.5 sm:mb-1 truncate"
+                className="text-xs text-slate-400 font-medium mb-1 truncate"
                 title={card.label}
               >
                 {card.label}
               </p>
               <p
-                className="text-sm sm:text-base font-semibold text-[var(--color-text-primary)] truncate"
+                className="text-lg sm:text-xl font-black text-white tracking-tight truncate tabular-nums"
                 title={card.value}
               >
                 {card.value}

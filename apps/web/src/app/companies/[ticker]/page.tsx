@@ -1,9 +1,11 @@
 import { notFound } from "next/navigation";
+import Link from "next/link";
 import { getCompany, getIndicators, getFinancials } from "@/lib/api";
 import { CompanyHeader } from "@/components/company/CompanyHeader";
 import { IndicatorsGrid } from "@/components/company/IndicatorsGrid";
 import { HistoryChart } from "@/components/company/HistoryChart";
 import { FinancialTable } from "@/components/company/FinancialTable";
+import { ArrowLeft } from "lucide-react";
 import type { Metadata } from "next";
 
 interface CompanyPageProps {
@@ -63,83 +65,102 @@ export default async function CompanyPage({ params }: CompanyPageProps) {
   );
 
   return (
-    <div className="mx-auto max-w-7xl px-3 sm:px-6 lg:px-8 py-6 sm:py-8 space-y-5 sm:space-y-6">
-      {/* Company Header */}
-      <CompanyHeader company={company.data} />
+    <div className="w-full">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-6 sm:py-10 space-y-6 sm:space-y-8">
+        {/* Back Link */}
+        <div>
+          <Link
+            href="/"
+            className="inline-flex items-center gap-2 text-xs sm:text-sm font-semibold text-slate-400 hover:text-cyan-400 transition-colors px-3.5 py-2 rounded-xl bg-slate-900/80 border border-slate-800 hover:border-cyan-500/40 shadow-sm"
+          >
+            <ArrowLeft className="w-4 h-4" />
+            <span>Voltar para todas as empresas</span>
+          </Link>
+        </div>
 
-      {/* Indicators */}
-      {indicators?.data && indicators.data.length > 0 && (
-        <section>
-          <h2 className="text-base sm:text-lg font-semibold text-[var(--color-text-primary)] mb-2.5 sm:mb-3">
-            Indicadores Financeiros
-          </h2>
-          <IndicatorsGrid indicators={indicators.data} />
-        </section>
-      )}
+        {/* Company Header */}
+        <CompanyHeader company={company.data} />
 
-      {/* Charts */}
-      {revenueHistory.length > 1 && (
-        <section>
-          <h2 className="text-base sm:text-lg font-semibold text-[var(--color-text-primary)] mb-2.5 sm:mb-3">
-            Histórico
-          </h2>
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 sm:gap-4">
-            <HistoryChart
-              title="Receita Líquida"
-              data={revenueHistory}
-              dataKey="netRevenue"
-              color="#06b6d4"
-              gradientId="revenueGradient"
-            />
-            <HistoryChart
-              title="Lucro Líquido"
-              data={netIncomeHistory}
-              dataKey="netIncome"
-              color="#8b5cf6"
-              gradientId="netIncomeGradient"
-            />
-          </div>
-        </section>
-      )}
+        {/* Indicators */}
+        {indicators?.data && indicators.data.length > 0 && (
+          <section className="space-y-3">
+            <h2 className="text-lg sm:text-xl font-bold text-white tracking-tight">
+              Indicadores Financeiros
+            </h2>
+            <IndicatorsGrid indicators={indicators.data} />
+          </section>
+        )}
 
-      {/* Financial Statements */}
-      <section>
-        <h2 className="text-base sm:text-lg font-semibold text-[var(--color-text-primary)] mb-2.5 sm:mb-3">
-          Demonstrações Financeiras
-        </h2>
-        <div className="space-y-3 sm:space-y-4">
-          {balanceSheet && (
-            <div className="grid grid-cols-1 xl:grid-cols-2 gap-3 sm:gap-4">
-              <FinancialTable
-                title="Balanço Patrimonial — Ativo"
-                lineItems={balanceSheet.assets}
-                currencyScale={balanceSheet.currencyScale}
+        {/* Charts */}
+        {revenueHistory.length > 1 && (
+          <section className="space-y-3">
+            <h2 className="text-lg sm:text-xl font-bold text-white tracking-tight">
+              Histórico Financeiro Anual
+            </h2>
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
+              <HistoryChart
+                title="Receita Líquida (Histórico)"
+                data={revenueHistory}
+                dataKey="netRevenue"
+                color="#06b6d4"
+                gradientId="revenueGradient"
               />
-              <FinancialTable
-                title="Balanço Patrimonial — Passivo"
-                lineItems={balanceSheet.liabilities}
-                currencyScale={balanceSheet.currencyScale}
+              <HistoryChart
+                title="Lucro Líquido (Histórico)"
+                data={netIncomeHistory}
+                dataKey="netIncome"
+                color="#8b5cf6"
+                gradientId="netIncomeGradient"
               />
             </div>
-          )}
+          </section>
+        )}
 
-          {incomeStatement && (
-            <FinancialTable
-              title="Demonstração de Resultado (DRE)"
-              lineItems={incomeStatement.lineItems}
-              currencyScale={incomeStatement.currencyScale}
-            />
-          )}
+        {/* Financial Statements */}
+        <section className="space-y-4">
+          <div>
+            <h2 className="text-lg sm:text-xl font-bold text-white tracking-tight">
+              Demonstrações Financeiras Oficiais
+            </h2>
+            <p className="text-xs sm:text-sm text-slate-400 mt-1">
+              Dados extraídos diretamente dos informes padronizados (DFP/ITR) da CVM
+            </p>
+          </div>
 
-          {cashFlow && (
-            <FinancialTable
-              title="Fluxo de Caixa"
-              lineItems={cashFlow.lineItems}
-              currencyScale={cashFlow.currencyScale}
-            />
-          )}
-        </div>
-      </section>
+          <div className="space-y-4 sm:space-y-6">
+            {balanceSheet && (
+              <div className="grid grid-cols-1 xl:grid-cols-2 gap-4 sm:gap-6">
+                <FinancialTable
+                  title="Balanço Patrimonial — Ativo"
+                  lineItems={balanceSheet.assets}
+                  currencyScale={balanceSheet.currencyScale}
+                />
+                <FinancialTable
+                  title="Balanço Patrimonial — Passivo"
+                  lineItems={balanceSheet.liabilities}
+                  currencyScale={balanceSheet.currencyScale}
+                />
+              </div>
+            )}
+
+            {incomeStatement && (
+              <FinancialTable
+                title="Demonstração do Resultado do Exercício (DRE)"
+                lineItems={incomeStatement.lineItems}
+                currencyScale={incomeStatement.currencyScale}
+              />
+            )}
+
+            {cashFlow && (
+              <FinancialTable
+                title="Demonstração do Fluxo de Caixa (DFC)"
+                lineItems={cashFlow.lineItems}
+                currencyScale={cashFlow.currencyScale}
+              />
+            )}
+          </div>
+        </section>
+      </div>
     </div>
   );
 }
