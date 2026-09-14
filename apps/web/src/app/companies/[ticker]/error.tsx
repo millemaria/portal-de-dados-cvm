@@ -10,7 +10,7 @@ export default function CompanyError({
   reset: () => void;
 }) {
   return (
-    <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-16">
+    <div className="mx-auto max-w-7xl px-3 sm:px-6 lg:px-8 py-10 sm:py-16">
       <ErrorMessage
         title="Erro ao carregar empresa"
         message={error.message || "Não foi possível carregar os dados desta empresa."}

@@ -91,7 +91,7 @@ export function IndicatorsGrid({ indicators }: IndicatorsGridProps) {
   ];
 
   return (
-    <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+    <div className="grid grid-cols-2 min-[540px]:grid-cols-3 lg:grid-cols-4 gap-2.5 sm:gap-3.5">
       {cards.map((card, i) => {
         const trend = getTrend(card.raw, card.prev, card.invertTrend);
         const colorVar = `var(--color-${card.color})`;
@@ -102,16 +102,16 @@ export function IndicatorsGrid({ indicators }: IndicatorsGridProps) {
             initial={{ opacity: 0, y: 15 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.3, delay: i * 0.05 }}
-            className="glass-card p-4 group"
+            className="glass-card p-3 sm:p-4 group min-w-0 flex flex-col justify-between"
           >
             <div className="flex items-center justify-between mb-2">
               <card.icon
-                className="h-4 w-4"
+                className="h-3.5 w-3.5 sm:h-4 sm:w-4 shrink-0"
                 style={{ color: colorVar }}
               />
               {trend && (
                 <span
-                  className={`flex items-center text-xs ${
+                  className={`flex items-center text-[10px] sm:text-xs shrink-0 ${
                     trend === "up"
                       ? "text-[var(--color-accent)]"
                       : trend === "down"
@@ -129,12 +129,20 @@ export function IndicatorsGrid({ indicators }: IndicatorsGridProps) {
                 </span>
               )}
             </div>
-            <p className="text-xs text-[var(--color-text-muted)] mb-1">
-              {card.label}
-            </p>
-            <p className="text-base font-semibold text-[var(--color-text-primary)]">
-              {card.value}
-            </p>
+            <div>
+              <p
+                className="text-[11px] sm:text-xs text-[var(--color-text-muted)] mb-0.5 sm:mb-1 truncate"
+                title={card.label}
+              >
+                {card.label}
+              </p>
+              <p
+                className="text-sm sm:text-base font-semibold text-[var(--color-text-primary)] truncate"
+                title={card.value}
+              >
+                {card.value}
+              </p>
+            </div>
           </motion.div>
         );
       })}

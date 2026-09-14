@@ -3,9 +3,9 @@ import { SearchX } from "lucide-react";
 
 export default function CompanyNotFound() {
   return (
-    <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-16">
-      <div className="glass-card p-12 text-center max-w-md mx-auto">
-        <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-[var(--color-surface-hover)]">
+    <div className="mx-auto max-w-7xl px-3 sm:px-6 lg:px-8 py-10 sm:py-16">
+      <div className="glass-card p-6 sm:p-12 text-center max-w-md mx-auto">
+        <div className="mx-auto mb-3 sm:mb-4 flex h-12 w-12 sm:h-14 sm:w-14 items-center justify-center rounded-full bg-[var(--color-surface-hover)]">
           <SearchX className="h-7 w-7 text-[var(--color-text-muted)]" />
         </div>
         <h2 className="mb-2 text-xl font-semibold text-[var(--color-text-primary)]">

@@ -63,14 +63,14 @@ export default async function CompanyPage({ params }: CompanyPageProps) {
   );
 
   return (
-    <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8 space-y-6">
+    <div className="mx-auto max-w-7xl px-3 sm:px-6 lg:px-8 py-6 sm:py-8 space-y-5 sm:space-y-6">
       {/* Company Header */}
       <CompanyHeader company={company.data} />
 
       {/* Indicators */}
       {indicators?.data && indicators.data.length > 0 && (
         <section>
-          <h2 className="text-lg font-semibold text-[var(--color-text-primary)] mb-3">
+          <h2 className="text-base sm:text-lg font-semibold text-[var(--color-text-primary)] mb-2.5 sm:mb-3">
             Indicadores Financeiros
           </h2>
           <IndicatorsGrid indicators={indicators.data} />
@@ -80,10 +80,10 @@ export default async function CompanyPage({ params }: CompanyPageProps) {
       {/* Charts */}
       {revenueHistory.length > 1 && (
         <section>
-          <h2 className="text-lg font-semibold text-[var(--color-text-primary)] mb-3">
+          <h2 className="text-base sm:text-lg font-semibold text-[var(--color-text-primary)] mb-2.5 sm:mb-3">
             Histórico
           </h2>
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 sm:gap-4">
             <HistoryChart
               title="Receita Líquida"
               data={revenueHistory}
@@ -104,12 +104,12 @@ export default async function CompanyPage({ params }: CompanyPageProps) {
 
       {/* Financial Statements */}
       <section>
-        <h2 className="text-lg font-semibold text-[var(--color-text-primary)] mb-3">
+        <h2 className="text-base sm:text-lg font-semibold text-[var(--color-text-primary)] mb-2.5 sm:mb-3">
           Demonstrações Financeiras
         </h2>
-        <div className="space-y-4">
+        <div className="space-y-3 sm:space-y-4">
           {balanceSheet && (
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 xl:grid-cols-2 gap-3 sm:gap-4">
               <FinancialTable
                 title="Balanço Patrimonial — Ativo"
                 lineItems={balanceSheet.assets}

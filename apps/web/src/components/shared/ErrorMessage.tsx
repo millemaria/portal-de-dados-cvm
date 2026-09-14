@@ -18,12 +18,12 @@ export function ErrorMessage({
     <motion.div
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
-      className="glass-card p-8 text-center"
+      className="glass-card p-5 sm:p-8 text-center"
     >
-      <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-[var(--color-danger)]/10">
-        <AlertTriangle className="h-6 w-6 text-[var(--color-danger)]" />
+      <div className="mx-auto mb-3 sm:mb-4 flex h-10 w-10 sm:h-12 sm:w-12 items-center justify-center rounded-full bg-[var(--color-danger)]/10">
+        <AlertTriangle className="h-5 w-5 sm:h-6 sm:w-6 text-[var(--color-danger)]" />
       </div>
-      <h3 className="mb-2 text-lg font-semibold text-[var(--color-text-primary)]">
+      <h3 className="mb-1.5 sm:mb-2 text-base sm:text-lg font-semibold text-[var(--color-text-primary)]">
         {title}
       </h3>
       <p className="mb-4 text-sm text-[var(--color-text-secondary)]">
