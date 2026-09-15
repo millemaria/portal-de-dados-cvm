@@ -26,7 +26,7 @@ export async function CompanyResults({ search, page }: CompanyResultsProps) {
     }
 
     return (
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5 lg:gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8 w-full">
         {companies.map((company, i) => (
           <CompanyCard key={company.cdCvm} company={company} index={i} />
         ))}

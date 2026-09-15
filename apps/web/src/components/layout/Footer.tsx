@@ -1,8 +1,8 @@
 export function Footer() {
   return (
-    <footer className="border-t border-slate-800/80 bg-slate-950/60 mt-auto w-full">
-      <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8 w-full">
-        <div className="flex flex-col items-center gap-3 sm:gap-4 sm:flex-row sm:justify-between text-center sm:text-left">
+    <footer className="border-t border-slate-800/80 bg-slate-950/70 mt-auto w-full py-8">
+      <div className="page-container w-full max-w-[1440px] mx-auto px-6 lg:px-8">
+        <div className="flex flex-col items-center gap-4 sm:flex-row sm:justify-between text-center sm:text-left">
           <div className="text-xs sm:text-sm text-slate-400 font-medium">
             <p>
               Dados públicos extraídos diretamente do{" "}
@@ -16,7 +16,7 @@ export function Footer() {
               </a>
             </p>
           </div>
-          <div className="text-[11px] sm:text-xs text-slate-400">
+          <div className="text-[11px] sm:text-xs text-slate-500 font-medium">
             <p>
               Projeto open source para fins educacionais e de pesquisa financeira.
             </p>

@@ -14,17 +14,17 @@ export function EmptyState({
 }: EmptyStateProps) {
   return (
     <motion.div
-      initial={{ opacity: 0, scale: 0.95 }}
+      initial={{ opacity: 0, scale: 0.97 }}
       animate={{ opacity: 1, scale: 1 }}
-      className="glass-card p-6 sm:p-12 flex flex-col items-center justify-center text-center mx-auto"
+      className="glass-card p-8 sm:p-14 flex flex-col items-center justify-center text-center mx-auto border border-slate-800/90 rounded-2xl max-w-xl"
     >
-      <div className="mb-3 sm:mb-4 flex h-12 w-12 sm:h-14 sm:w-14 items-center justify-center rounded-full bg-slate-800/80 border border-slate-700/60 shadow-inner">
-        <SearchX className="h-6 w-6 sm:h-7 sm:w-7 text-slate-400" />
+      <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-slate-900 border border-slate-800 shadow-inner">
+        <SearchX className="h-7 w-7 text-cyan-400" />
       </div>
-      <h3 className="mb-1.5 sm:mb-2 text-base sm:text-lg font-semibold text-[var(--color-text-primary)]">
+      <h3 className="mb-2 text-lg sm:text-xl font-bold text-white tracking-tight">
         {title}
       </h3>
-      <p className="text-sm text-[var(--color-text-secondary)]">{message}</p>
+      <p className="text-sm text-slate-400 max-w-md leading-relaxed">{message}</p>
     </motion.div>
   );
 }

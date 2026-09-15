@@ -18,21 +18,21 @@ export function ErrorMessage({
     <motion.div
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
-      className="glass-card p-5 sm:p-8 text-center"
+      className="glass-card p-6 sm:p-10 text-center border border-rose-500/30 bg-slate-900/90 rounded-2xl max-w-xl mx-auto"
     >
-      <div className="mx-auto mb-3 sm:mb-4 flex h-10 w-10 sm:h-12 sm:w-12 items-center justify-center rounded-full bg-[var(--color-danger)]/10">
-        <AlertTriangle className="h-5 w-5 sm:h-6 sm:w-6 text-[var(--color-danger)]" />
+      <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-2xl bg-rose-500/10 border border-rose-500/20">
+        <AlertTriangle className="h-6 w-6 text-rose-400" />
       </div>
-      <h3 className="mb-1.5 sm:mb-2 text-base sm:text-lg font-semibold text-[var(--color-text-primary)]">
+      <h3 className="mb-2 text-lg sm:text-xl font-bold text-white tracking-tight">
         {title}
       </h3>
-      <p className="mb-4 text-sm text-[var(--color-text-secondary)]">
+      <p className="mb-5 text-sm text-slate-400 leading-relaxed max-w-md mx-auto">
         {message}
       </p>
       {onRetry && (
         <button
           onClick={onRetry}
-          className="rounded-lg border border-[var(--color-border)] px-4 py-2 text-sm text-[var(--color-text-primary)] transition-all hover:border-[var(--color-primary)] hover:text-[var(--color-primary)]"
+          className="rounded-xl border border-slate-700 bg-slate-800 px-5 py-2.5 text-sm font-semibold text-white transition-all hover:border-cyan-400 hover:text-cyan-300 active:scale-95 cursor-pointer"
         >
           Tentar novamente
         </button>
