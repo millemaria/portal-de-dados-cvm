@@ -71,7 +71,32 @@ export class DatabricksClient {
       );
     }
 
-    const result = (await response.json()) as DatabricksStatementResponse;
+    let result = (await response.json()) as DatabricksStatementResponse;
+    const statementId = result.statement_id;
+
+    // Wait/poll if statement is still executing (e.g. warehouse cold start)
+    let attempts = 0;
+    while (
+      (result.status.state === "PENDING" || result.status.state === "RUNNING") &&
+      attempts < 30
+    ) {
+      await new Promise((resolve) => setTimeout(resolve, 2000));
+      attempts++;
+
+      const pollResponse = await fetch(
+        `${this.baseUrl}/api/2.0/sql/statements/${statementId}`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${this.token}`,
+          },
+        }
+      );
+
+      if (pollResponse.ok) {
+        result = (await pollResponse.json()) as DatabricksStatementResponse;
+      }
+    }
 
     if (result.status.state === "FAILED") {
       throw new DatabricksError(

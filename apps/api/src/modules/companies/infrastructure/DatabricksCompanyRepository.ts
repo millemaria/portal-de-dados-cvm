@@ -7,6 +7,28 @@ import type { DatabricksRow } from "../../../shared/infrastructure/databricks/ty
  * Databricks implementation of CompanyRepository.
  * Queries Gold layer tables via Databricks SQL Statement API.
  */
+const VIEW_CTE = `
+  WITH company_view AS (
+    SELECT 
+      CAST(r.CODIGO_CVM AS STRING) as cd_cvm,
+      r.CNPJ_CIA as cnpj,
+      r.NOME_EMPRESA as company_name,
+      CAST(r.CODIGO_CVM AS STRING) as ticker,
+      COALESCE(s.SETOR_CLASSIFICADO, 'Outros') as sector,
+      NULL as sub_sector,
+      NULL as segment,
+      'ATIVO' as status,
+      CAST(r.DATA_REFERENCIA AS STRING) as latest_reference_date,
+      CAST(r.ATIVO_TOTAL AS STRING) as total_assets,
+      CAST(r.PATRIMONIO_LIQUIDO AS STRING) as total_equity,
+      CAST(r.RECEITA_LIQUIDA AS STRING) as net_revenue,
+      CAST(r.LUCRO_LIQUIDO AS STRING) as net_income,
+      'MIL' as currency_scale
+    FROM gold_resumo_financeiro r
+    LEFT JOIN gold_empresas_setor s ON r.CODIGO_CVM = s.CD_CVM
+  )
+`;
+
 export class DatabricksCompanyRepository implements CompanyRepository {
   constructor(private readonly client: DatabricksClient) {}
 
@@ -38,7 +60,7 @@ export class DatabricksCompanyRepository implements CompanyRepository {
       conditions.length > 0 ? `WHERE ${conditions.join(" AND ")}` : "";
 
     // Count query
-    const countSql = `SELECT COUNT(*) as total FROM company_summary ${whereClause}`;
+    const countSql = `${VIEW_CTE} SELECT COUNT(*) as total FROM company_view ${whereClause}`;
     const countResult = await this.client.executeStatement(countSql, parameters);
     const total = parseInt(countResult[0]?.total ?? "0", 10);
 
@@ -47,7 +69,8 @@ export class DatabricksCompanyRepository implements CompanyRepository {
     const limit = params.pageSize ?? 20;
 
     const dataSql = `
-      SELECT * FROM company_summary
+      ${VIEW_CTE}
+      SELECT * FROM company_view
       ${whereClause}
       ORDER BY company_name
       LIMIT ${limit} OFFSET ${offset}
@@ -62,7 +85,12 @@ export class DatabricksCompanyRepository implements CompanyRepository {
   }
 
   async findByTicker(ticker: string): Promise<CompanySummary | null> {
-    const sql = `SELECT * FROM company_summary WHERE UPPER(ticker) = UPPER(:ticker) LIMIT 1`;
+    const sql = `
+      ${VIEW_CTE}
+      SELECT * FROM company_view 
+      WHERE UPPER(ticker) = UPPER(:ticker) OR UPPER(company_name) LIKE UPPER(CONCAT('%', :ticker, '%'))
+      LIMIT 1
+    `;
     const rows = await this.client.executeStatement(sql, [
       { name: "ticker", value: ticker, type: "STRING" },
     ]);

@@ -1,4 +1,20 @@
 import { z } from "zod";
+import fs from "node:fs";
+import path from "node:path";
+
+// Auto-load .env if available in environment
+if (typeof process.loadEnvFile === "function") {
+  for (const envPath of [".env", "../.env", "../../.env"]) {
+    const resolved = path.resolve(process.cwd(), envPath);
+    if (fs.existsSync(resolved)) {
+      try {
+        process.loadEnvFile(resolved);
+      } catch {
+        // ignore if already loaded or syntax issues
+      }
+    }
+  }
+}
 
 const envSchema = z.object({
   // Databricks
