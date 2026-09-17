@@ -2,6 +2,7 @@ import type { CompanySummary, CompanySearchParams } from "@portal-cvm/types";
 import type { CompanyRepository } from "../domain/CompanyRepository.js";
 import type { DatabricksClient } from "../../../shared/infrastructure/databricks/DatabricksClient.js";
 import type { DatabricksRow } from "../../../shared/infrastructure/databricks/types.js";
+import { MockCompanyRepository } from "./MockCompanyRepository.js";
 
 /**
  * Databricks implementation of CompanyRepository.
@@ -30,73 +31,91 @@ const VIEW_CTE = `
 `;
 
 export class DatabricksCompanyRepository implements CompanyRepository {
+  private readonly fallback = new MockCompanyRepository();
+
   constructor(private readonly client: DatabricksClient) {}
 
   async findAll(params: CompanySearchParams): Promise<{
     data: CompanySummary[];
     total: number;
   }> {
-    const conditions: string[] = [];
-    const parameters: Array<{ name: string; value: string; type?: string }> = [];
+    try {
+      const conditions: string[] = [];
+      const parameters: Array<{ name: string; value: string; type?: string }> = [];
 
-    if (params.search) {
-      conditions.push(
-        "(UPPER(company_name) LIKE UPPER(CONCAT('%', :search, '%')) OR UPPER(ticker) LIKE UPPER(CONCAT('%', :search, '%')))"
+      if (params.search) {
+        conditions.push(
+          "(UPPER(company_name) LIKE UPPER(CONCAT('%', :search, '%')) OR UPPER(ticker) LIKE UPPER(CONCAT('%', :search, '%')))"
+        );
+        parameters.push({ name: "search", value: params.search, type: "STRING" });
+      }
+
+      if (params.sector) {
+        conditions.push("sector = :sector");
+        parameters.push({ name: "sector", value: params.sector, type: "STRING" });
+      }
+
+      if (params.status) {
+        conditions.push("status = :status");
+        parameters.push({ name: "status", value: params.status, type: "STRING" });
+      }
+
+      const whereClause =
+        conditions.length > 0 ? `WHERE ${conditions.join(" AND ")}` : "";
+
+      // Count query
+      const countSql = `${VIEW_CTE} SELECT COUNT(*) as total FROM company_view ${whereClause}`;
+      const countResult = await this.client.executeStatement(countSql, parameters);
+      const total = parseInt(countResult[0]?.total ?? "0", 10);
+
+      // Data query with pagination
+      const offset = ((params.page ?? 1) - 1) * (params.pageSize ?? 20);
+      const limit = params.pageSize ?? 20;
+
+      const dataSql = `
+        ${VIEW_CTE}
+        SELECT * FROM company_view
+        ${whereClause}
+        ORDER BY company_name
+        LIMIT ${limit} OFFSET ${offset}
+      `;
+
+      const rows = await this.client.executeStatement(dataSql, parameters);
+
+      return {
+        data: rows.map(this.mapRowToCompanySummary),
+        total,
+      };
+    } catch (error) {
+      console.warn(
+        "⚠️ [DatabricksCompanyRepository] Falha ao consultar Databricks. Utilizando repositório de contingência local:",
+        error instanceof Error ? error.message : error
       );
-      parameters.push({ name: "search", value: params.search, type: "STRING" });
+      return this.fallback.findAll(params);
     }
-
-    if (params.sector) {
-      conditions.push("sector = :sector");
-      parameters.push({ name: "sector", value: params.sector, type: "STRING" });
-    }
-
-    if (params.status) {
-      conditions.push("status = :status");
-      parameters.push({ name: "status", value: params.status, type: "STRING" });
-    }
-
-    const whereClause =
-      conditions.length > 0 ? `WHERE ${conditions.join(" AND ")}` : "";
-
-    // Count query
-    const countSql = `${VIEW_CTE} SELECT COUNT(*) as total FROM company_view ${whereClause}`;
-    const countResult = await this.client.executeStatement(countSql, parameters);
-    const total = parseInt(countResult[0]?.total ?? "0", 10);
-
-    // Data query with pagination
-    const offset = ((params.page ?? 1) - 1) * (params.pageSize ?? 20);
-    const limit = params.pageSize ?? 20;
-
-    const dataSql = `
-      ${VIEW_CTE}
-      SELECT * FROM company_view
-      ${whereClause}
-      ORDER BY company_name
-      LIMIT ${limit} OFFSET ${offset}
-    `;
-
-    const rows = await this.client.executeStatement(dataSql, parameters);
-
-    return {
-      data: rows.map(this.mapRowToCompanySummary),
-      total,
-    };
   }
 
   async findByTicker(ticker: string): Promise<CompanySummary | null> {
-    const sql = `
-      ${VIEW_CTE}
-      SELECT * FROM company_view 
-      WHERE UPPER(ticker) = UPPER(:ticker) OR UPPER(company_name) LIKE UPPER(CONCAT('%', :ticker, '%'))
-      LIMIT 1
-    `;
-    const rows = await this.client.executeStatement(sql, [
-      { name: "ticker", value: ticker, type: "STRING" },
-    ]);
+    try {
+      const sql = `
+        ${VIEW_CTE}
+        SELECT * FROM company_view 
+        WHERE UPPER(ticker) = UPPER(:ticker) OR UPPER(company_name) LIKE UPPER(CONCAT('%', :ticker, '%'))
+        LIMIT 1
+      `;
+      const rows = await this.client.executeStatement(sql, [
+        { name: "ticker", value: ticker, type: "STRING" },
+      ]);
 
-    if (rows.length === 0) return null;
-    return this.mapRowToCompanySummary(rows[0]);
+      if (rows.length === 0) return null;
+      return this.mapRowToCompanySummary(rows[0]);
+    } catch (error) {
+      console.warn(
+        `⚠️ [DatabricksCompanyRepository] Falha ao consultar ticker ${ticker} no Databricks. Utilizando repositório de contingência local:`,
+        error instanceof Error ? error.message : error
+      );
+      return this.fallback.findByTicker(ticker);
+    }
   }
 
   private mapRowToCompanySummary(row: DatabricksRow): CompanySummary {
