@@ -25,8 +25,8 @@ const envSchema = z.object({
   DATABRICKS_SCHEMA: z.string().default("gold"),
 
   // Server
-  API_PORT: z.coerce.number().int().min(1).max(65535).default(3001),
-  API_HOST: z.string().default("0.0.0.0"),
+  API_PORT: z.coerce.number().int().min(1).max(65535).default(3333),
+  API_HOST: z.string().default("127.0.0.1"),
   NODE_ENV: z
     .enum(["development", "production", "test"])
     .default("development"),
@@ -39,6 +39,11 @@ const envSchema = z.object({
 
   // Cache
   CACHE_TTL: z.coerce.number().int().min(0).default(300),
+
+  // Auth
+  JWT_SECRET: z
+    .string()
+    .default("portal-cvm-admin-secret-key-production-change-in-env"),
 });
 
 export type EnvConfig = z.infer<typeof envSchema>;

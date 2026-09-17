@@ -23,6 +23,14 @@ import { MockIndicatorRepository } from "./modules/indicators/infrastructure/Moc
 import { GetIndicatorsUseCase } from "./modules/indicators/application/GetIndicatorsUseCase.js";
 import { registerIndicatorRoutes } from "./modules/indicators/presentation/indicatorRoutes.js";
 
+// Auth
+import { PasswordService } from "./modules/auth/infrastructure/PasswordService.js";
+import { TokenService } from "./modules/auth/infrastructure/TokenService.js";
+import { MockUserRepository } from "./modules/auth/infrastructure/MockUserRepository.js";
+import { LoginUseCase } from "./modules/auth/application/LoginUseCase.js";
+import { VerifySessionUseCase } from "./modules/auth/application/VerifySessionUseCase.js";
+import { registerAuthRoutes } from "./modules/auth/presentation/authRoutes.js";
+
 export async function createApp(config: EnvConfig) {
   const server = await buildServer(config);
 
@@ -68,6 +76,11 @@ export async function createApp(config: EnvConfig) {
     indicatorRepository = new MockIndicatorRepository();
   }
 
+  // --- Auth Services & Repository ---
+  const passwordService = new PasswordService();
+  const tokenService = new TokenService(config.JWT_SECRET);
+  const userRepository = new MockUserRepository(passwordService);
+
   // --- Use Cases ---
   const getCompanies = new GetCompaniesUseCase(companyRepository, cache);
   const getCompanyByTicker = new GetCompanyByTickerUseCase(
@@ -76,11 +89,26 @@ export async function createApp(config: EnvConfig) {
   );
   const getFinancials = new GetFinancialsUseCase(financialRepository, cache);
   const getIndicators = new GetIndicatorsUseCase(indicatorRepository, cache);
+  const loginUseCase = new LoginUseCase(
+    userRepository,
+    passwordService,
+    tokenService
+  );
+  const verifySessionUseCase = new VerifySessionUseCase(
+    userRepository,
+    tokenService
+  );
 
   // --- Routes ---
+  registerAuthRoutes(server, loginUseCase, verifySessionUseCase);
   registerCompanyRoutes(server, getCompanies, getCompanyByTicker);
   registerFinancialRoutes(server, getFinancials);
   registerIndicatorRoutes(server, getIndicators);
+
+  server.addHook('onRequest', (request, reply, done) => {
+    console.log(`[REQ] ${request.method} ${request.url}`);
+    done();
+  });
 
   // --- Global error handler ---
   server.setErrorHandler((error: Error & { statusCode?: number }, _request, reply) => {

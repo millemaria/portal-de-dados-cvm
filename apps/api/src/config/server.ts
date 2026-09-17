@@ -23,7 +23,9 @@ export async function buildServer(config: EnvConfig) {
   // CORS
   await server.register(cors, {
     origin: config.NODE_ENV === "production" ? false : true,
-    methods: ["GET"],
+    methods: ["GET", "POST", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+    credentials: true,
   });
 
   // Rate limiting

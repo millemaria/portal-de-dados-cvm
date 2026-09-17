@@ -32,3 +32,12 @@ export type {
   ApiResult,
   PaginatedResult,
 } from "./api.js";
+
+// Auth types
+export type {
+  UserRole,
+  AdminUser,
+  LoginRequest,
+  LoginResponse,
+  AuthSession,
+} from "./auth.js";
