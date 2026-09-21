@@ -23,14 +23,17 @@ DOCUMENT_TYPES = [
     "DRA",      # Resultado Abrangente
 ]
 
-# Databricks paths (to be configured per workspace)
-BRONZE_PATH = "/mnt/portal_cvm/bronze"
-SILVER_PATH = "/mnt/portal_cvm/silver"
-GOLD_PATH = "/mnt/portal_cvm/gold"
-RAW_PATH = "/mnt/portal_cvm/raw"
-
-# Catalog and schema
-CATALOG = "portal_cvm"
+# Databricks paths (Unity Catalog Volumes & Lakehouse)
+CATALOG = "cvm_lakehouse"
+SCHEMA_OPS = "ops"
 SCHEMA_BRONZE = "bronze"
 SCHEMA_SILVER = "silver"
 SCHEMA_GOLD = "gold"
+
+VOLUME_SOURCE_FILES = f"/Volumes/{CATALOG}/{SCHEMA_OPS}/cvm_source_files"
+CSV_EXPORTS_BASE_PATH = f"{VOLUME_SOURCE_FILES}/csv_exports"
+
+RAW_PATH = VOLUME_SOURCE_FILES
+BRONZE_PATH = f"{CATALOG}.{SCHEMA_BRONZE}"
+SILVER_PATH = f"{CATALOG}.{SCHEMA_SILVER}"
+GOLD_PATH = f"{CATALOG}.{SCHEMA_GOLD}"
