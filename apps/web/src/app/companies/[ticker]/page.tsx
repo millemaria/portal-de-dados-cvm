@@ -4,7 +4,7 @@ import { getCompany, getIndicators, getFinancials } from "@/lib/api";
 import { CompanyHeader } from "@/components/company/CompanyHeader";
 import { IndicatorsGrid } from "@/components/company/IndicatorsGrid";
 import { HistoryChart } from "@/components/company/HistoryChart";
-import { FinancialTable } from "@/components/company/FinancialTable";
+import { FinancialStatementsSection } from "@/components/company/FinancialStatementsSection";
 import { ArrowLeft } from "lucide-react";
 import type { Metadata } from "next";
 
@@ -41,9 +41,9 @@ export default async function CompanyPage({ params }: CompanyPageProps) {
     notFound();
   }
 
-  const balanceSheet = financials?.data?.balanceSheet?.[0];
-  const incomeStatement = financials?.data?.incomeStatement?.[0];
-  const cashFlow = financials?.data?.cashFlow?.[0];
+  const balanceSheets = financials?.data?.balanceSheet ?? [];
+  const incomeStatements = financials?.data?.incomeStatement ?? [];
+  const cashFlows = financials?.data?.cashFlow ?? [];
 
   // Build history from income statements
   const revenueHistory = (financials?.data?.incomeStatement ?? []).map(
@@ -59,7 +59,7 @@ export default async function CompanyPage({ params }: CompanyPageProps) {
     (stmt) => ({
       referenceDate: stmt.referenceDate,
       netIncome:
-        stmt.lineItems.find((li) => li.accountCode === "3.08")?.value ?? 0,
+        stmt.lineItems.find((li) => li.accountCode === "3.08" || li.accountCode === "3.11" || li.accountCode === "3.09")?.value ?? 0,
       currencyScale: stmt.currencyScale,
     })
   );
@@ -116,51 +116,14 @@ export default async function CompanyPage({ params }: CompanyPageProps) {
           </section>
         )}
 
-        {/* Financial Statements */}
-        <section className="space-y-4">
-          <div>
-            <h2 className="text-lg sm:text-xl font-bold text-white tracking-tight">
-              Demonstrações Financeiras Oficiais
-            </h2>
-            <p className="text-xs sm:text-sm text-slate-400 mt-1">
-              Dados extraídos diretamente dos informes padronizados (DFP/ITR) da CVM
-            </p>
-          </div>
-
-          <div className="space-y-4 sm:space-y-6">
-            {balanceSheet && (
-              <div className="grid grid-cols-1 xl:grid-cols-2 gap-4 sm:gap-6">
-                <FinancialTable
-                  title="Balanço Patrimonial — Ativo"
-                  lineItems={balanceSheet.assets}
-                  currencyScale={balanceSheet.currencyScale}
-                />
-                <FinancialTable
-                  title="Balanço Patrimonial — Passivo"
-                  lineItems={balanceSheet.liabilities}
-                  currencyScale={balanceSheet.currencyScale}
-                />
-              </div>
-            )}
-
-            {incomeStatement && (
-              <FinancialTable
-                title="Demonstração do Resultado do Exercício (DRE)"
-                lineItems={incomeStatement.lineItems}
-                currencyScale={incomeStatement.currencyScale}
-              />
-            )}
-
-            {cashFlow && (
-              <FinancialTable
-                title="Demonstração do Fluxo de Caixa (DFC)"
-                lineItems={cashFlow.lineItems}
-                currencyScale={cashFlow.currencyScale}
-              />
-            )}
-          </div>
-        </section>
+        {/* Financial Statements with Interactive Year Selector */}
+        <FinancialStatementsSection
+          balanceSheets={balanceSheets}
+          incomeStatements={incomeStatements}
+          cashFlows={cashFlows}
+        />
       </div>
     </div>
   );
 }
+
