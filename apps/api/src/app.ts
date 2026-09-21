@@ -14,12 +14,14 @@ import { registerCompanyRoutes } from "./modules/companies/presentation/companie
 // Financial statements
 import type { FinancialRepository } from "./modules/financial-statements/domain/FinancialRepository.js";
 import { MockFinancialRepository } from "./modules/financial-statements/infrastructure/MockFinancialRepository.js";
+import { DatabricksFinancialRepository } from "./modules/financial-statements/infrastructure/DatabricksFinancialRepository.js";
 import { GetFinancialsUseCase } from "./modules/financial-statements/application/GetFinancialsUseCase.js";
 import { registerFinancialRoutes } from "./modules/financial-statements/presentation/financialRoutes.js";
 
 // Indicators
 import type { IndicatorRepository } from "./modules/indicators/domain/IndicatorRepository.js";
 import { MockIndicatorRepository } from "./modules/indicators/infrastructure/MockIndicatorRepository.js";
+import { DatabricksIndicatorRepository } from "./modules/indicators/infrastructure/DatabricksIndicatorRepository.js";
 import { GetIndicatorsUseCase } from "./modules/indicators/application/GetIndicatorsUseCase.js";
 import { registerIndicatorRoutes } from "./modules/indicators/presentation/indicatorRoutes.js";
 
@@ -70,10 +72,8 @@ export async function createApp(config: EnvConfig) {
     });
 
     companyRepository = new DatabricksCompanyRepository(databricksClient);
-    // TODO: Implement DatabricksFinancialRepository and DatabricksIndicatorRepository
-    // For now, fall back to mock for financial and indicator data
-    financialRepository = new MockFinancialRepository();
-    indicatorRepository = new MockIndicatorRepository();
+    financialRepository = new DatabricksFinancialRepository(databricksClient);
+    indicatorRepository = new DatabricksIndicatorRepository(databricksClient);
   }
 
   // --- Auth Services & Repository ---

@@ -61,10 +61,22 @@ export class MockFinancialRepository implements FinancialRepository {
     { accountCode: "6.04", accountDescription: "Variação de Caixa", value: 18160000, level: 1 },
   ];
 
+  private getMultiplier(ticker: string): number {
+    let hash = 0;
+    const clean = ticker.toUpperCase().trim();
+    for (let i = 0; i < clean.length; i++) {
+      hash = (hash << 5) - hash + clean.charCodeAt(i);
+      hash |= 0;
+    }
+    const normalized = Math.abs(hash % 100) / 100; // 0.00 to 0.99
+    return 0.1 + normalized * 0.9; // 0.1 to 1.0 multiplier
+  }
+
   async getBalanceSheet(
-    _ticker: string,
+    ticker: string,
     _params: FinancialQueryInput
   ): Promise<BalanceSheet[]> {
+    const mult = this.getMultiplier(ticker);
     const years = ["2024-12-31", "2023-12-31", "2022-12-31"];
     return years.map((date, i) => ({
       referenceDate: date,
@@ -72,19 +84,20 @@ export class MockFinancialRepository implements FinancialRepository {
       currencyScale: "MIL",
       assets: this.mockLineItems.map((item) => ({
         ...item,
-        value: Math.round(item.value * (1 - i * 0.05)),
+        value: Math.round(item.value * mult * (1 - i * 0.05)),
       })),
       liabilities: this.mockLiabilities.map((item) => ({
         ...item,
-        value: Math.round(item.value * (1 - i * 0.05)),
+        value: Math.round(item.value * mult * (1 - i * 0.05)),
       })),
     }));
   }
 
   async getIncomeStatement(
-    _ticker: string,
+    ticker: string,
     _params: FinancialQueryInput
   ): Promise<IncomeStatement[]> {
+    const mult = this.getMultiplier(ticker);
     const periods = [
       { ref: "2024-12-31", start: "2024-01-01", end: "2024-12-31" },
       { ref: "2023-12-31", start: "2023-01-01", end: "2023-12-31" },
@@ -98,15 +111,16 @@ export class MockFinancialRepository implements FinancialRepository {
       currencyScale: "MIL",
       lineItems: this.mockDRE.map((item) => ({
         ...item,
-        value: Math.round(item.value * (1 - i * 0.08)),
+        value: Math.round(item.value * mult * (1 - i * 0.08)),
       })),
     }));
   }
 
   async getCashFlow(
-    _ticker: string,
+    ticker: string,
     _params: FinancialQueryInput
   ): Promise<CashFlow[]> {
+    const mult = this.getMultiplier(ticker);
     const periods = [
       { ref: "2024-12-31", start: "2024-01-01", end: "2024-12-31" },
       { ref: "2023-12-31", start: "2023-01-01", end: "2023-12-31" },
@@ -120,22 +134,23 @@ export class MockFinancialRepository implements FinancialRepository {
       method: "MI" as const,
       lineItems: this.mockCashFlow.map((item) => ({
         ...item,
-        value: Math.round(item.value * (1 - i * 0.1)),
+        value: Math.round(item.value * mult * (1 - i * 0.1)),
       })),
     }));
   }
 
   async getRevenueHistory(
-    _ticker: string,
+    ticker: string,
     limit: number
   ): Promise<RevenueHistoryEntry[]> {
-    const base = 511847000;
+    const mult = this.getMultiplier(ticker);
+    const base = 511847000 * mult;
     const entries: RevenueHistoryEntry[] = [];
     for (let i = 0; i < Math.min(limit, 10); i++) {
       const year = 2024 - i;
       entries.push({
         referenceDate: `${year}-12-31`,
-        netRevenue: Math.round(base * (1 - i * 0.06) + Math.random() * 10000000),
+        netRevenue: Math.round(base * (1 - i * 0.06)),
         currencyScale: "MIL",
       });
     }
@@ -143,16 +158,17 @@ export class MockFinancialRepository implements FinancialRepository {
   }
 
   async getNetIncomeHistory(
-    _ticker: string,
+    ticker: string,
     limit: number
   ): Promise<NetIncomeHistoryEntry[]> {
-    const base = 104761000;
+    const mult = this.getMultiplier(ticker);
+    const base = 104761000 * mult;
     const entries: NetIncomeHistoryEntry[] = [];
     for (let i = 0; i < Math.min(limit, 10); i++) {
       const year = 2024 - i;
       entries.push({
         referenceDate: `${year}-12-31`,
-        netIncome: Math.round(base * (1 - i * 0.1) + (Math.random() - 0.3) * 20000000),
+        netIncome: Math.round(base * (1 - i * 0.1)),
         currencyScale: "MIL",
       });
     }
