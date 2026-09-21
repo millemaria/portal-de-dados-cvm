@@ -36,19 +36,29 @@ CVM (dados.cvm.gov.br)
 
 ## Componentes
 
-### 1. Data Pipeline (Databricks)
+### 1. Data Pipeline (Databricks Lakehouse)
 
-- **Ingestion**: Download dos ZIPs anuais da CVM
-- **Bronze**: CSVs raw com metadados (source_file, ingestion_date, reference_year)
-- **Silver**: Dados limpos, tipados e normalizados (companies, balance_sheet, income_statement, cash_flow)
-- **Gold**: Tabelas analíticas prontas para consumo (company_summary, financial_indicators)
+- **Ingestion**: Download dos ZIPs anuais da CVM (dados.cvm.gov.br)
+- **Bronze**: CSVs brutos com metadados de ingestão (`source_file`, `ingestion_date`, `reference_year`)
+- **Silver (`cvm_lakehouse/silver/*`)**: Leitura recursiva de todas as partições de dados (`part-*.csv`) das **8 entidades lógicas** sem limitação de empresas:
+  1. `vw_companhia_atual`
+  2. `vw_balanco_patrimonial_latest`
+  3. `vw_resultado_latest`
+  4. `vw_fluxo_caixa_latest`
+  5. `vw_demonstracao_financeira_latest`
+  6. `fato_composicao_capital`
+  7. `fato_parecer_auditoria`
+  8. `fato_documento_cvm`
+- **Gold (`cvm_lakehouse/gold/*`)**: Tabelas analíticas otimizadas com 100% das companhias (`company_summary`, `financial_indicators`) e views publicadas das 8 entidades.
 
 ### 2. Backend (Fastify + TypeScript)
 
 - **Clean Architecture**: domain → application → infrastructure → presentation
 - **Integração**: DatabricksClient → SQL Statement API → tabelas Gold
+- **Busca Global**: Busca dinâmica por Nome Empresarial, Ticker, CNPJ (formatado ou numérico) e Código CVM sobre a base Gold completa
 - **Mock Mode**: Repositórios mock para desenvolvimento local sem Databricks
 - **Cache**: In-memory com TTL configurável
+
 
 ### 3. Frontend (Next.js + React)
 

@@ -1,17 +1,23 @@
 -- =============================================================================
--- Databricks SQL: Schemas e Tabelas Gold para o Portal CVM Self-Service
+-- Databricks SQL: Schemas e Tabelas para o Portal CVM Self-Service
 -- Catálogo Oficial: cvm_lakehouse
 -- =============================================================================
 
 USE CATALOG cvm_lakehouse;
 
--- Criação do schema Gold (caso não exista)
-CREATE SCHEMA IF NOT EXISTS cvm_lakehouse.gold
-COMMENT 'Camada Gold - estruturas analíticas prontas para o Portal CVM Self-Service';
+-- Criação dos schemas
+CREATE SCHEMA IF NOT EXISTS cvm_lakehouse.bronze
+COMMENT 'Camada Bronze - dados brutos ingeridos com metadados de auditoria';
 
--- -----------------------------------------------------------------------------
--- EIXO 1: EMPRESAS
--- -----------------------------------------------------------------------------
+CREATE SCHEMA IF NOT EXISTS cvm_lakehouse.silver
+COMMENT 'Camada Silver - dados limpos, tipados e normalizados das 8 entidades lógicas';
+
+CREATE SCHEMA IF NOT EXISTS cvm_lakehouse.gold
+COMMENT 'Camada Gold - estruturas analíticas prontas para consumo do Portal CVM';
+
+-- =============================================================================
+-- 8 ENTIDADES LÓGICAS (Camadas Silver e Gold)
+-- =============================================================================
 
 -- 1. vw_companhia_atual
 CREATE TABLE IF NOT EXISTS cvm_lakehouse.gold.vw_companhia_atual (
@@ -27,10 +33,6 @@ CREATE TABLE IF NOT EXISTS cvm_lakehouse.gold.vw_companhia_atual (
     data_processamento_gold TIMESTAMP COMMENT 'Data e hora do processamento Gold'
 ) USING DELTA
 COMMENT 'Visão analítica de companhias abertas para busca e identificação no Portal CVM';
-
--- -----------------------------------------------------------------------------
--- EIXO 2: CONSULTA FINANCEIRA
--- -----------------------------------------------------------------------------
 
 -- 2. vw_balanco_patrimonial_latest
 CREATE TABLE IF NOT EXISTS cvm_lakehouse.gold.vw_balanco_patrimonial_latest (
@@ -130,10 +132,6 @@ CREATE TABLE IF NOT EXISTS cvm_lakehouse.gold.vw_demonstracao_financeira_latest 
 PARTITIONED BY (ano_exercicio)
 COMMENT 'Visão geral de todas as demonstrações financeiras publicadas';
 
--- -----------------------------------------------------------------------------
--- EIXO 3: DOCUMENTOS
--- -----------------------------------------------------------------------------
-
 -- 6. fato_composicao_capital
 CREATE TABLE IF NOT EXISTS cvm_lakehouse.gold.fato_composicao_capital (
     cnpj STRING COMMENT 'CNPJ da companhia (14 dígitos)',
@@ -183,3 +181,46 @@ CREATE TABLE IF NOT EXISTS cvm_lakehouse.gold.fato_documento_cvm (
 ) USING DELTA
 PARTITIONED BY (ano_exercicio)
 COMMENT 'Histórico de entregas e versões de documentos protocolados na CVM';
+
+-- =============================================================================
+-- TABELAS DE CONSUMO ANALÍTICO (API e Portal Web)
+-- =============================================================================
+
+-- Company Summary (Todas as companhias da base Silver)
+CREATE TABLE IF NOT EXISTS cvm_lakehouse.gold.company_summary (
+    cd_cvm STRING,
+    cnpj STRING,
+    company_name STRING,
+    ticker STRING,
+    sector STRING,
+    sub_sector STRING,
+    segment STRING,
+    status STRING,
+    latest_reference_date DATE,
+    total_assets DOUBLE,
+    total_equity DOUBLE,
+    net_revenue DOUBLE,
+    net_income DOUBLE,
+    currency_scale STRING
+) USING DELTA
+COMMENT 'Tabela consolidada com todas as companhias e principais saldos para a API';
+
+-- Financial Indicators (Todas as companhias e anos disponíveis)
+CREATE TABLE IF NOT EXISTS cvm_lakehouse.gold.financial_indicators (
+    cd_cvm STRING,
+    cnpj STRING,
+    ticker STRING,
+    reference_date DATE,
+    roe DOUBLE,
+    roa DOUBLE,
+    net_margin DOUBLE,
+    gross_margin DOUBLE,
+    current_ratio DOUBLE,
+    debt_to_equity DOUBLE,
+    total_assets DOUBLE,
+    total_equity DOUBLE,
+    net_revenue DOUBLE,
+    net_income DOUBLE,
+    currency_scale STRING
+) USING DELTA
+COMMENT 'Indicadores financeiros calculados por companhia e exercício';

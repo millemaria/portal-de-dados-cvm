@@ -25,7 +25,7 @@ const envSchema = z.object({
   DATABRICKS_SCHEMA: z.string().default("gold"),
 
   // Server
-  API_PORT: z.coerce.number().int().min(1).max(65535).default(3333),
+  API_PORT: z.coerce.number().int().min(1).max(65535).default(3001),
   API_HOST: z.string().default("127.0.0.1"),
   NODE_ENV: z
     .enum(["development", "production", "test"])

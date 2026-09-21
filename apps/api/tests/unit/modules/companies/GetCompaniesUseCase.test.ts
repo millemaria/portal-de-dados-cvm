@@ -47,6 +47,30 @@ describe("GetCompaniesUseCase", () => {
     expect(result.data[0].companyName).toContain("VALE");
   });
 
+  it("should filter by CNPJ search", async () => {
+    const result = await useCase.execute({
+      page: 1,
+      pageSize: 20,
+      search: "33.000.167/0001-01",
+    });
+
+    expect(result.success).toBe(true);
+    expect(result.data.length).toBe(1);
+    expect(result.data[0].ticker).toBe("PETR4");
+  });
+
+  it("should filter by CVM code search", async () => {
+    const result = await useCase.execute({
+      page: 1,
+      pageSize: 20,
+      search: "9512",
+    });
+
+    expect(result.success).toBe(true);
+    expect(result.data.length).toBe(1);
+    expect(result.data[0].ticker).toBe("PETR4");
+  });
+
   it("should return empty results for unknown search", async () => {
     const result = await useCase.execute({
       page: 1,

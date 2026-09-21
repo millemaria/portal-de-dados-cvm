@@ -1,111 +1,93 @@
 # Dicionário de Dados — Portal de Dados CVM
 
-## Fonte: CVM DFP (Demonstrações Financeiras Padronizadas)
+## Regra Fundamental do Modelo de Dados
 
-URL: `https://dados.cvm.gov.br/dados/CIA_ABERTA/DOC/DFP/DADOS/`
-
-### Colunas do CSV Original
-
-| Coluna | Tipo | Descrição |
-|--------|------|-----------|
-| CNPJ_CIA | STRING | CNPJ da companhia |
-| DT_REFER | DATE | Data de referência |
-| VERSAO | INT | Versão do documento |
-| DENOM_CIA | STRING | Nome empresarial |
-| CD_CVM | STRING | Código CVM |
-| GRUPO_DFP | STRING | Consolidado (CON) ou Individual (IND) |
-| MOEDA | STRING | Moeda |
-| ESCALA_MOEDA | STRING | Escala (MIL, UNIDADE) |
-| ORDEM_EXERC | STRING | ÚLTIMO ou PENÚLTIMO |
-| DT_INI_EXERC | DATE | Início do exercício |
-| DT_FIM_EXERC | DATE | Fim do exercício |
-| CD_CONTA | STRING | Código da conta contábil |
-| DS_CONTA | STRING | Descrição da conta |
-| VL_CONTA | DOUBLE | Valor monetário |
-
-### Tipos de Demonstração
-
-| Sigla | Descrição |
-|-------|-----------|
-| BPA | Balanço Patrimonial Ativo |
-| BPP | Balanço Patrimonial Passivo |
-| DRE | Demonstração de Resultado |
-| DFC-MI | Fluxo de Caixa — Método Indireto |
-| DFC-MD | Fluxo de Caixa — Método Direto |
-| DMPL | Mutações do Patrimônio Líquido |
-| DVA | Demonstração de Valor Adicionado |
-| DRA | Resultado Abrangente |
+> **As 8 entidades representam estruturas/datasets lógicos do projeto e NÃO 8 companhias.**
+> Cada uma das 8 entidades processa **todas as companhias** (centenas/milhares) existentes na origem (`cvm_lakehouse/silver/*`).
 
 ---
 
-## Camadas de Dados
+## As 8 Entidades Lógicas do Projeto
 
-### Bronze
+### 1. `vw_companhia_atual`
+Visão cadastral com a situação mais recente de **todas as companhias abertas** na CVM.
+- **Chave de deduplicação**: `cnpj_cia` (Window ordenada por `data_registro DESC`, `data_inicio_situacao DESC`, `_year DESC`, `versao DESC`, pegando o primeiro registro `rn = 1`).
+- **Colunas principais**: `cnpj_cia`, `denominacao_cia`, `denominacao_social`, `cd_cvm`, `situacao`, `segmento`, `data_inicio_situacao`, `data_registro`, `setor_atividade`, `_source_file`, `_ingestion_date`, `_year`.
 
-Dados brutos com metadados de ingestão adicionados.
+### 2. `vw_balanco_patrimonial_latest`
+Balanço Patrimonial (Ativo e Passivo: BPA e BPP) mais recente por empresa, período e conta contábil.
+- **Chave de deduplicação/latest**: `(cnpj_cia, cd_conta, grupo_dfp, dt_fim_exerc, ordem_exerc)` ordenada por `versao DESC`, `dt_refer DESC`.
+- **Colunas principais**: `cnpj_cia`, `cd_cvm`, `cd_conta`, `ds_conta`, `vl_conta`, `grupo_dfp`, `ordem_exerc`, `dt_refer`, `dt_fim_exerc`, `versao`, `statement_side` (`ATIVO`/`PASSIVO`), `escala_moeda`.
 
-| Coluna adicional | Descrição |
-|------------------|-----------|
-| source_file | Nome do arquivo CSV original |
-| ingestion_date | Data/hora da ingestão |
-| reference_year | Ano de referência |
-| document_type | Tipo do documento (BPA, BPP, etc.) |
+### 3. `vw_resultado_latest`
+Demonstração do Resultado do Exercício (DRE) mais recente por empresa, período e conta contábil.
+- **Chave de deduplicação/latest**: `(cnpj_cia, cd_conta, grupo_dfp, dt_fim_exerc, dt_ini_exerc, ordem_exerc)` ordenada por `versao DESC`, `dt_refer DESC`.
+- **Colunas principais**: `cnpj_cia`, `cd_cvm`, `cd_conta`, `ds_conta`, `vl_conta`, `grupo_dfp`, `ordem_exerc`, `dt_refer`, `dt_ini_exerc`, `dt_fim_exerc`, `versao`, `escala_moeda`.
 
-### Silver
+### 4. `vw_fluxo_caixa_latest`
+Demonstração dos Fluxos de Caixa (DFC Método Direto e Indireto: DFC_MD / DFC_MI) mais recente.
+- **Chave de deduplicação/latest**: `(cnpj_cia, cd_conta, grupo_dfp, metodo, dt_fim_exerc, dt_ini_exerc, ordem_exerc)` ordenada por `versao DESC`, `dt_refer DESC`.
+- **Colunas principais**: `cnpj_cia`, `cd_cvm`, `cd_conta`, `ds_conta`, `vl_conta`, `grupo_dfp`, `metodo` (`MI`/`MD`), `dt_refer`, `dt_fim_exerc`, `versao`.
 
-Dados limpos, tipados e normalizados.
+### 5. `vw_demonstracao_financeira_latest`
+Visão consolidada unificada de todas as demonstrações contábeis (BPA, BPP, DRE, DFC, DMPL, DVA, DRA).
+- **Chave de deduplicação/latest**: `(tipo_dem, cnpj_cia, cd_conta, grupo_dfp, dt_fim_exerc, ordem_exerc)` ordenada por `versao DESC`, `dt_refer DESC`.
+- **Colunas principais**: `tipo_dem`, `cnpj_cia`, `cd_cvm`, `cd_conta`, `ds_conta`, `vl_conta`, `grupo_dfp`, `dt_refer`, `dt_fim_exerc`, `versao`.
 
-**silver.companies**
+### 6. `fato_composicao_capital`
+Composição de capital social e classes de ações (ordinárias, preferenciais, total emitido).
+- **Chave de deduplicação**: `(cnpj_cia, dt_refer, tipo_acao)` ordenada por `versao DESC`.
+- **Colunas principais**: `cnpj_cia`, `cd_cvm`, `dt_refer`, `tipo_acao` (`ON`/`PN`/`TOTAL`), `qtde_acoes`, `valor_capital`, `versao`.
+
+### 7. `fato_parecer_auditoria`
+Relatórios e pareceres de auditoria independente emitidos sobre as demonstrações financeiras.
+- **Chave de deduplicação**: `(cnpj_cia, dt_refer, cnpj_auditor)` ordenada por `versao DESC`.
+- **Colunas principais**: `cnpj_cia`, `cd_cvm`, `dt_refer`, `cnpj_auditor`, `nome_auditor`, `tipo_parecer`, `versao`.
+
+### 8. `fato_documento_cvm`
+Metadados de todos os formulários e documentos protocolados junto à CVM.
+- **Chave de deduplicação**: `id_doc` ou `(cnpj_cia, tipo_doc, dt_refer)` ordenada por `versao DESC`.
+- **Colunas principais**: `id_doc`, `cnpj_cia`, `cd_cvm`, `tipo_doc`, `dt_refer`, `data_entrega`, `versao`, `status`, `link_doc`.
+
+---
+
+## Camadas de Dados do Lakehouse
+
+### Silver (`cvm_lakehouse/silver/*`)
+- Dados limpos, tipados, normalizados e deduplicados por regras de negócio.
+- Leitura recursiva de todas as partições (`part-*.csv`) ignorando arquivos de controle (`_SUCCESS`, etc.).
+- Preserva **todas as companhias** e todos os anos disponíveis.
+
+### Gold (`cvm_lakehouse/gold/*` e tabelas Delta)
+Tabelas otimizadas e orientadas ao consumo da API REST e Portal Web:
+
+**`gold.company_summary`**
 | Coluna | Tipo | Descrição |
 |--------|------|-----------|
 | cd_cvm | STRING | Código CVM |
 | cnpj | STRING | CNPJ |
-| company_name | STRING | Nome da empresa |
-| reference_date | DATE | Data de referência |
-| status | STRING | ATIVO/INATIVO |
-| ticker | STRING | Ticker (enriquecido) |
+| company_name | STRING | Razão Social / Nome da Empresa |
+| ticker | STRING | Símbolo de negociação |
+| sector | STRING | Setor de atividade |
+| status | STRING | Situação cadastral (`ATIVO`/`INATIVO`) |
+| latest_reference_date | DATE | Data de referência da última demonstração |
+| total_assets | DOUBLE | Ativo Total consolidado |
+| total_equity | DOUBLE | Patrimônio Líquido consolidado |
+| net_revenue | DOUBLE | Receita Líquida consolidada |
+| net_income | DOUBLE | Lucro Líquido consolidado |
+| currency_scale | STRING | Escala da moeda (`MIL`/`UNIDADE`) |
 
-**silver.balance_sheet / income_statement / cash_flow**
-| Coluna | Tipo | Descrição |
-|--------|------|-----------|
-| cd_cvm | STRING | Código CVM |
-| reference_date | DATE | Data de referência |
-| consolidation_type | STRING | CON/IND |
-| account_code | STRING | Código da conta |
-| account_description | STRING | Descrição da conta |
-| value | DOUBLE | Valor monetário |
-| currency_scale | STRING | Escala da moeda |
-| level | INT | Nível hierárquico |
-
-### Gold
-
-Tabelas orientadas ao consumo da API.
-
-**gold.company_summary**
+**`gold.financial_indicators`**
 | Coluna | Tipo | Descrição |
 |--------|------|-----------|
 | cd_cvm | STRING | Código CVM |
 | cnpj | STRING | CNPJ |
-| company_name | STRING | Nome |
 | ticker | STRING | Ticker |
-| sector | STRING | Setor |
-| status | STRING | Status |
-| latest_reference_date | DATE | Última data |
-| total_assets | DOUBLE | Ativo total |
-| total_equity | DOUBLE | Patrimônio líquido |
-| net_revenue | DOUBLE | Receita líquida |
-| net_income | DOUBLE | Lucro líquido |
-| currency_scale | STRING | Escala |
+| reference_date | DATE | Data de referência |
+| roe | DOUBLE | Retorno sobre o Patrimônio Líquido (`net_income / total_equity`) |
+| roa | DOUBLE | Retorno sobre o Ativo Total (`net_income / total_assets`) |
+| net_margin | DOUBLE | Margem Líquida (`net_income / net_revenue`) |
+| gross_margin | DOUBLE | Margem Bruta (`gross_profit / net_revenue`) |
+| current_ratio | DOUBLE | Liquidez Corrente (`current_assets / current_liabilities`) |
+| debt_to_equity | DOUBLE | Dívida/PL (`(total_assets - total_equity) / total_equity`) |
 
-**gold.financial_indicators**
-| Coluna | Tipo | Descrição |
-|--------|------|-----------|
-| cd_cvm | STRING | Código CVM |
-| ticker | STRING | Ticker |
-| reference_date | DATE | Data |
-| roe | DOUBLE | ROE |
-| roa | DOUBLE | ROA |
-| net_margin | DOUBLE | Margem líquida |
-| gross_margin | DOUBLE | Margem bruta |
-| current_ratio | DOUBLE | Liquidez corrente |
-| debt_to_equity | DOUBLE | Dívida/PL |

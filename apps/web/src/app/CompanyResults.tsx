@@ -36,7 +36,7 @@ export async function CompanyResults({ search, page }: CompanyResultsProps) {
     return (
       <EmptyState
         title="Erro ao carregar empresas"
-        message="Verifique se a API está rodando em http://localhost:3333"
+        message="Verifique se a API está rodando em http://localhost:3001"
       />
     );
   }

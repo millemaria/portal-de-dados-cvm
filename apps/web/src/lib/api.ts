@@ -1,7 +1,7 @@
 const API_BASE_URL =
-  process.env.NEXT_PUBLIC_API_URL ??
   process.env.API_URL ??
-  "http://127.0.0.1:3333";
+  process.env.NEXT_PUBLIC_API_URL ??
+  "http://127.0.0.1:3001";
 
 async function fetchApi<T>(path: string): Promise<T> {
   const url = `${API_BASE_URL}${path}`;

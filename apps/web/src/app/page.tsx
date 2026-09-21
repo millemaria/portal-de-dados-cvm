@@ -13,11 +13,15 @@ const POPULAR_TICKERS = [
   { ticker: "PETR4", name: "Petrobras" },
   { ticker: "VALE3", name: "Vale" },
   { ticker: "ITUB4", name: "Itaú" },
-  { ticker: "MGLU3", name: "Magalu" },
-  { ticker: "WEGE3", name: "WEG" },
-  { ticker: "ABEV3", name: "Ambev" },
   { ticker: "BBAS3", name: "Banco do Brasil" },
   { ticker: "BBDC4", name: "Bradesco" },
+  { ticker: "WEGE3", name: "WEG" },
+  { ticker: "ABEV3", name: "Ambev" },
+  { ticker: "CPFE3", name: "CPFL Energia" },
+  { ticker: "RAIL3", name: "Rumo" },
+  { ticker: "ELET3", name: "Eletrobras" },
+  { ticker: "SUZB3", name: "Suzano" },
+  { ticker: "MGLU3", name: "Magalu" },
 ];
 
 export default async function HomePage({ searchParams }: HomePageProps) {

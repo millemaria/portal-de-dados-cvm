@@ -135,6 +135,262 @@ export class MockCompanyRepository implements CompanyRepository {
       netIncome: 33820000,
       currencyScale: "MIL",
     },
+    {
+      cdCvm: "18660",
+      cnpj: "02.429.144/0001-93",
+      companyName: "CPFL ENERGIA S.A.",
+      ticker: "CPFE3",
+      sector: "Utilidade Pública",
+      subSector: "Energia Elétrica",
+      segment: "Novo Mercado",
+      status: "ATIVO",
+      latestReferenceDate: "2024-12-31",
+      totalAssets: 78940000,
+      totalEquity: 18450000,
+      netRevenue: 41200000,
+      netIncome: 5430000,
+      currencyScale: "MIL",
+    },
+    {
+      cdCvm: "19682",
+      cnpj: "13.552.796/0001-97",
+      companyName: "RUMO S.A.",
+      ticker: "RAIL3",
+      sector: "Bens Industriais",
+      subSector: "Transporte Ferroviário",
+      segment: "Novo Mercado",
+      status: "ATIVO",
+      latestReferenceDate: "2024-12-31",
+      totalAssets: 52300000,
+      totalEquity: 16800000,
+      netRevenue: 11450000,
+      netIncome: 1230000,
+      currencyScale: "MIL",
+    },
+    {
+      cdCvm: "2437",
+      cnpj: "00.001.180/0001-26",
+      companyName: "CENTRAIS ELETRICAS BRASILEIRAS S.A. - ELETROBRAS",
+      ticker: "ELET3",
+      sector: "Utilidade Pública",
+      subSector: "Energia Elétrica",
+      segment: "Novo Mercado",
+      status: "ATIVO",
+      latestReferenceDate: "2024-12-31",
+      totalAssets: 268000000,
+      totalEquity: 112000000,
+      netRevenue: 38500000,
+      netIncome: 4390000,
+      currencyScale: "MIL",
+    },
+    {
+      cdCvm: "13986",
+      cnpj: "16.404.287/0001-55",
+      companyName: "SUZANO S.A.",
+      ticker: "SUZB3",
+      sector: "Materiais Básicos",
+      subSector: "Papel e Celulose",
+      segment: "Novo Mercado",
+      status: "ATIVO",
+      latestReferenceDate: "2024-12-31",
+      totalAssets: 145000000,
+      totalEquity: 48900000,
+      netRevenue: 40200000,
+      netIncome: 7420000,
+      currencyScale: "MIL",
+    },
+    {
+      cdCvm: "1961",
+      cnpj: "33.611.500/0001-19",
+      companyName: "GERDAU S.A.",
+      ticker: "GGBR4",
+      sector: "Materiais Básicos",
+      subSector: "Siderurgia",
+      segment: "Nível 1",
+      status: "ATIVO",
+      latestReferenceDate: "2024-12-31",
+      totalAssets: 81500000,
+      totalEquity: 51200000,
+      netRevenue: 68900000,
+      netIncome: 7100000,
+      currencyScale: "MIL",
+    },
+    {
+      cdCvm: "19992",
+      cnpj: "53.113.791/0001-22",
+      companyName: "TOTVS S.A.",
+      ticker: "TOTS3",
+      sector: "Tecnologia da Informação",
+      subSector: "Programas e Serviços",
+      segment: "Novo Mercado",
+      status: "ATIVO",
+      latestReferenceDate: "2024-12-31",
+      totalAssets: 10450000,
+      totalEquity: 5120000,
+      netRevenue: 4680000,
+      netIncome: 620000,
+      currencyScale: "MIL",
+    },
+    {
+      cdCvm: "24481",
+      cnpj: "05.814.703/0001-90",
+      companyName: "HAPVIDA PARTICIPACOES E INVESTIMENTOS S.A.",
+      ticker: "HAPV3",
+      sector: "Saúde",
+      subSector: "Serviços Médicos",
+      segment: "Novo Mercado",
+      status: "ATIVO",
+      latestReferenceDate: "2024-12-31",
+      totalAssets: 48900000,
+      totalEquity: 21500000,
+      netRevenue: 27400000,
+      netIncome: -180000,
+      currencyScale: "MIL",
+    },
+    {
+      cdCvm: "12629",
+      cnpj: "89.637.490/0001-45",
+      companyName: "KLABIN S.A.",
+      ticker: "KLBN11",
+      sector: "Materiais Básicos",
+      subSector: "Papel e Celulose",
+      segment: "Nível 2",
+      status: "ATIVO",
+      latestReferenceDate: "2024-12-31",
+      totalAssets: 56700000,
+      totalEquity: 14200000,
+      netRevenue: 18400000,
+      netIncome: 2850000,
+      currencyScale: "MIL",
+    },
+    {
+      cdCvm: "24708",
+      cnpj: "32.785.497/0001-97",
+      companyName: "NATURA &CO HOLDING S.A.",
+      ticker: "NTCO3",
+      sector: "Consumo não Cíclico",
+      subSector: "Produtos de Uso Pessoal",
+      segment: "Novo Mercado",
+      status: "ATIVO",
+      latestReferenceDate: "2024-12-31",
+      totalAssets: 38200000,
+      totalEquity: 16500000,
+      netRevenue: 26800000,
+      netIncome: 3100000,
+      currencyScale: "MIL",
+    },
+    {
+      cdCvm: "19410",
+      cnpj: "02.846.056/0001-97",
+      companyName: "CCR S.A.",
+      ticker: "CCRO3",
+      sector: "Bens Industriais",
+      subSector: "Concessões Rodoviárias",
+      segment: "Novo Mercado",
+      status: "ATIVO",
+      latestReferenceDate: "2024-12-31",
+      totalAssets: 46200000,
+      totalEquity: 11800000,
+      netRevenue: 13200000,
+      netIncome: 1420000,
+      currencyScale: "MIL",
+    },
+    {
+      cdCvm: "18325",
+      cnpj: "07.689.002/0001-89",
+      companyName: "EMBRAER S.A.",
+      ticker: "EMBR3",
+      sector: "Bens Industriais",
+      subSector: "Material Aeronáutico e Defesa",
+      segment: "Novo Mercado",
+      status: "ATIVO",
+      latestReferenceDate: "2024-12-31",
+      totalAssets: 49800000,
+      totalEquity: 15400000,
+      netRevenue: 26100000,
+      netIncome: 840000,
+      currencyScale: "MIL",
+    },
+    {
+      cdCvm: "14443",
+      cnpj: "43.776.517/0001-80",
+      companyName: "CIA SANEAMENTO BASICO ESTADO SAO PAULO - SABESP",
+      ticker: "SBSP3",
+      sector: "Utilidade Pública",
+      subSector: "Água e Saneamento",
+      segment: "Novo Mercado",
+      status: "ATIVO",
+      latestReferenceDate: "2024-12-31",
+      totalAssets: 62400000,
+      totalEquity: 31200000,
+      netRevenue: 25600000,
+      netIncome: 3520000,
+      currencyScale: "MIL",
+    },
+    {
+      cdCvm: "19704",
+      cnpj: "16.670.085/0001-55",
+      companyName: "LOCALIZA RENT A CAR S.A.",
+      ticker: "RENT3",
+      sector: "Consumo Cíclico",
+      subSector: "Aluguel de Carros",
+      segment: "Novo Mercado",
+      status: "ATIVO",
+      latestReferenceDate: "2024-12-31",
+      totalAssets: 68500000,
+      totalEquity: 24800000,
+      netRevenue: 30200000,
+      netIncome: 1780000,
+      currencyScale: "MIL",
+    },
+    {
+      cdCvm: "22187",
+      cnpj: "10.744.358/0001-06",
+      companyName: "PRIO S.A.",
+      ticker: "PRIO3",
+      sector: "Petróleo, Gás e Biocombustíveis",
+      subSector: "Exploração e Produção",
+      segment: "Novo Mercado",
+      status: "ATIVO",
+      latestReferenceDate: "2024-12-31",
+      totalAssets: 42100000,
+      totalEquity: 19800000,
+      netRevenue: 13900000,
+      netIncome: 5820000,
+      currencyScale: "MIL",
+    },
+    {
+      cdCvm: "19780",
+      cnpj: "61.585.865/0001-51",
+      companyName: "RAIA DROGASIL S.A.",
+      ticker: "RADL3",
+      sector: "Consumo não Cíclico",
+      subSector: "Comércio e Distribuição Farmacêutica",
+      segment: "Novo Mercado",
+      status: "ATIVO",
+      latestReferenceDate: "2024-12-31",
+      totalAssets: 22400000,
+      totalEquity: 6800000,
+      netRevenue: 36400000,
+      netIncome: 1100000,
+      currencyScale: "MIL",
+    },
+    {
+      cdCvm: "20117",
+      cnpj: "03.220.438/0001-73",
+      companyName: "EQUATORIAL ENERGIA S.A.",
+      ticker: "EQTL3",
+      sector: "Utilidade Pública",
+      subSector: "Energia Elétrica",
+      segment: "Novo Mercado",
+      status: "ATIVO",
+      latestReferenceDate: "2024-12-31",
+      totalAssets: 89400000,
+      totalEquity: 22100000,
+      netRevenue: 41200000,
+      netIncome: 2950000,
+      currencyScale: "MIL",
+    },
   ];
 
   async findAll(params: CompanySearchParams): Promise<{
@@ -144,12 +400,15 @@ export class MockCompanyRepository implements CompanyRepository {
     let filtered = [...this.companies];
 
     if (params.search) {
-      const searchUpper = params.search.toUpperCase();
-      filtered = filtered.filter(
-        (c) =>
-          c.companyName.toUpperCase().includes(searchUpper) ||
-          c.ticker.toUpperCase().includes(searchUpper)
-      );
+      const searchUpper = params.search.toUpperCase().trim();
+      const searchDigits = params.search.replace(/\D/g, "");
+      filtered = filtered.filter((c) => {
+        const nameMatch = c.companyName.toUpperCase().includes(searchUpper);
+        const tickerMatch = c.ticker ? c.ticker.toUpperCase().includes(searchUpper) : false;
+        const cvmMatch = c.cdCvm ? c.cdCvm.includes(searchUpper) : false;
+        const cnpjMatch = c.cnpj.includes(searchUpper) || (searchDigits.length >= 4 && c.cnpj.replace(/\D/g, "").includes(searchDigits));
+        return nameMatch || tickerMatch || cvmMatch || cnpjMatch;
+      });
     }
 
     if (params.sector) {
@@ -170,10 +429,16 @@ export class MockCompanyRepository implements CompanyRepository {
   }
 
   async findByTicker(ticker: string): Promise<CompanySummary | null> {
+    const clean = ticker.toUpperCase().trim();
+    const cleanDigits = ticker.replace(/\D/g, "");
     return (
-      this.companies.find(
-        (c) => c.ticker.toUpperCase() === ticker.toUpperCase()
-      ) ?? null
+      this.companies.find((c) => {
+        if (c.ticker && c.ticker.toUpperCase() === clean) return true;
+        if (c.cdCvm === clean) return true;
+        if (c.cnpj === clean || (cleanDigits.length >= 8 && c.cnpj.replace(/\D/g, "") === cleanDigits)) return true;
+        return false;
+      }) ?? null
     );
   }
 }
+
