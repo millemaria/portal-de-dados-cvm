@@ -77,3 +77,39 @@ export const loginSchema = z.object({
 });
 
 export type LoginInput = z.infer<typeof loginSchema>;
+
+export const adminLevelSchema = z.enum([
+  "ADMIN_MASTER",
+  "ADMIN_GESTOR",
+  "ADMIN_ANALISTA",
+]);
+
+export const registerAdminSchema = z.object({
+  name: z
+    .string()
+    .min(1, "Nome completo é obrigatório")
+    .min(3, "O nome deve ter no mínimo 3 caracteres")
+    .max(120, "O nome não pode exceder 120 caracteres")
+    .transform((val) => val.trim()),
+  cpf: z
+    .string()
+    .min(1, "CPF é obrigatório")
+    .transform((val) => normalizeCpf(val))
+    .refine((val) => validateCpf(val), {
+      message: "CPF inválido. Verifique os dígitos informados.",
+    }),
+  password: z
+    .string()
+    .min(1, "Senha é obrigatória")
+    .min(6, "A senha deve ter no mínimo 6 caracteres")
+    .max(100, "A senha não pode exceder 100 caracteres"),
+  level: adminLevelSchema,
+  email: z
+    .string()
+    .email("E-mail com formato inválido")
+    .optional()
+    .or(z.literal("")),
+});
+
+export type RegisterAdminInput = z.infer<typeof registerAdminSchema>;
+

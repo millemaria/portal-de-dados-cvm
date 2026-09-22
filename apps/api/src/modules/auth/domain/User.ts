@@ -1,4 +1,4 @@
-import type { UserRole } from "@portal-cvm/types";
+import type { UserRole, AdminLevel } from "@portal-cvm/types";
 
 /**
  * Entidade de Usuário do sistema administrativo
@@ -9,7 +9,9 @@ export interface User {
   cpf: string; // Sempre normalizado com 11 dígitos numéricos
   email: string;
   role: UserRole;
+  level: AdminLevel;
   passwordHash: string;
   salt: string;
   createdAt: string;
 }
+

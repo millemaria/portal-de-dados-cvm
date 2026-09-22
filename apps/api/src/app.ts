@@ -28,9 +28,11 @@ import { registerIndicatorRoutes } from "./modules/indicators/presentation/indic
 // Auth
 import { PasswordService } from "./modules/auth/infrastructure/PasswordService.js";
 import { TokenService } from "./modules/auth/infrastructure/TokenService.js";
-import { MockUserRepository } from "./modules/auth/infrastructure/MockUserRepository.js";
+import { SqliteUserRepository } from "./modules/auth/infrastructure/SqliteUserRepository.js";
 import { LoginUseCase } from "./modules/auth/application/LoginUseCase.js";
 import { VerifySessionUseCase } from "./modules/auth/application/VerifySessionUseCase.js";
+import { RegisterAdminUseCase } from "./modules/auth/application/RegisterAdminUseCase.js";
+import { ListAdminsUseCase } from "./modules/auth/application/ListAdminsUseCase.js";
 import { registerAuthRoutes } from "./modules/auth/presentation/authRoutes.js";
 
 export async function createApp(config: EnvConfig) {
@@ -76,10 +78,17 @@ export async function createApp(config: EnvConfig) {
     indicatorRepository = new DatabricksIndicatorRepository(databricksClient);
   }
 
-  // --- Auth Services & Repository ---
+  // --- Auth Services & Repository (SQLite Persistente) ---
   const passwordService = new PasswordService();
   const tokenService = new TokenService(config.JWT_SECRET);
-  const userRepository = new MockUserRepository(passwordService);
+  const sqlitePath =
+    config.SQLITE_DB_PATH ??
+    (config.NODE_ENV === "test" ? ":memory:" : undefined);
+  const userRepository = new SqliteUserRepository(
+    sqlitePath,
+    passwordService
+  );
+
 
   // --- Use Cases ---
   const getCompanies = new GetCompaniesUseCase(companyRepository, cache);
@@ -98,9 +107,21 @@ export async function createApp(config: EnvConfig) {
     userRepository,
     tokenService
   );
+  const registerAdminUseCase = new RegisterAdminUseCase(
+    userRepository,
+    passwordService
+  );
+  const listAdminsUseCase = new ListAdminsUseCase(userRepository);
 
   // --- Routes ---
-  registerAuthRoutes(server, loginUseCase, verifySessionUseCase);
+  registerAuthRoutes(
+    server,
+    loginUseCase,
+    verifySessionUseCase,
+    registerAdminUseCase,
+    listAdminsUseCase
+  );
+
   registerCompanyRoutes(server, getCompanies, getCompanyByTicker);
   registerFinancialRoutes(server, getFinancials);
   registerIndicatorRoutes(server, getIndicators);

@@ -1,12 +1,13 @@
 import crypto from "node:crypto";
-import type { UserRole } from "@portal-cvm/types";
+import type { UserRole, AdminLevel } from "@portal-cvm/types";
 
 export interface TokenPayload {
   sub: string;
   name: string;
   cpf: string;
-  email: string;
+  email?: string;
   role: UserRole;
+  level: AdminLevel;
   iat: number;
   exp: number;
 }
@@ -47,7 +48,7 @@ export class TokenService {
    * Gera um token assinado (formato JWT HS256) contendo os dados do usuário.
    */
   generateToken(
-    user: { id: string; name: string; cpf: string; email: string; role: UserRole },
+    user: { id: string; name: string; cpf: string; email?: string; role: UserRole; level: AdminLevel },
     expiresInSeconds?: number
   ): string {
     const now = Math.floor(Date.now() / 1000);
@@ -64,9 +65,11 @@ export class TokenService {
       cpf: user.cpf,
       email: user.email,
       role: user.role,
+      level: user.level,
       iat: now,
       exp,
     };
+
 
     const encodedHeader = this.base64UrlEncode(JSON.stringify(header));
     const encodedPayload = this.base64UrlEncode(JSON.stringify(payload));

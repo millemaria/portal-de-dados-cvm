@@ -1,4 +1,5 @@
-import type { AdminUser, LoginResponse } from "@portal-cvm/types";
+import type { AdminUser, LoginResponse, AdminListItem } from "@portal-cvm/types";
+import type { RegisterAdminInput } from "@portal-cvm/validation";
 import { normalizeCpf } from "@portal-cvm/validation";
 
 const ADMIN_USER_STORAGE_KEY = "portal_cvm_admin_user";
@@ -36,6 +37,44 @@ export async function loginAdmin(
   return json.data;
 }
 
+export async function registerAdmin(
+  input: RegisterAdminInput
+): Promise<{ user: AdminUser }> {
+  const res = await fetch("/api/auth/register-admin", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(input),
+  });
+
+  const json = await res.json();
+
+  if (!res.ok || !json.success) {
+    const errorMsg =
+      json?.error?.message ?? "Erro ao realizar pré-cadastro do administrador.";
+    throw new Error(errorMsg);
+  }
+
+  return json.data;
+}
+
+export async function getAdminsList(): Promise<AdminListItem[]> {
+  const res = await fetch("/api/auth/admins", {
+    method: "GET",
+  });
+
+  const json = await res.json();
+
+  if (!res.ok || !json.success) {
+    const errorMsg =
+      json?.error?.message ?? "Erro ao consultar a lista de administradores.";
+    throw new Error(errorMsg);
+  }
+
+  return json.data.admins;
+}
+
 export async function logoutAdmin(): Promise<void> {
   try {
     await fetch("/api/auth/logout", {
@@ -60,3 +99,4 @@ export function getStoredAdminUser(): AdminUser | null {
     return null;
   }
 }
+

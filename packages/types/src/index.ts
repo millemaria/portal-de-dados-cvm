@@ -36,8 +36,18 @@ export type {
 // Auth types
 export type {
   UserRole,
+  AdminLevel,
   AdminUser,
   LoginRequest,
   LoginResponse,
   AuthSession,
+  RegisterAdminRequest,
+  RegisterAdminResponse,
+  AdminListItem,
 } from "./auth.js";
+export {
+  canManageAdmins,
+  canExportData,
+  getAdminLevelLabel,
+} from "./auth.js";
+

@@ -40,11 +40,13 @@ const envSchema = z.object({
   // Cache
   CACHE_TTL: z.coerce.number().int().min(0).default(300),
 
-  // Auth
+  // Auth & Database
   JWT_SECRET: z
     .string()
     .default("portal-cvm-admin-secret-key-production-change-in-env"),
+  SQLITE_DB_PATH: z.string().optional(),
 });
+
 
 export type EnvConfig = z.infer<typeof envSchema>;
 

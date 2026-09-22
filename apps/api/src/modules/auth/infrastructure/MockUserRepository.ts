@@ -19,6 +19,7 @@ export class MockUserRepository implements UserRepository {
       cpf: "11144477735",
       email: "admin@cvm.gov.br",
       role: "ADMIN",
+      level: "ADMIN_MASTER",
       passwordHash: adminPass.hash,
       salt: adminPass.salt,
       createdAt: "2025-01-01T00:00:00.000Z",
@@ -33,6 +34,7 @@ export class MockUserRepository implements UserRepository {
       cpf: "22255588846",
       email: "analista@cvm.gov.br",
       role: "USER",
+      level: "ADMIN_ANALISTA",
       passwordHash: userPass.hash,
       salt: userPass.salt,
       createdAt: "2025-01-01T00:00:00.000Z",
@@ -54,8 +56,17 @@ export class MockUserRepository implements UserRepository {
     return null;
   }
 
+  async create(user: User): Promise<void> {
+    this.users.set(user.cpf, { ...user });
+  }
+
+  async listAll(): Promise<User[]> {
+    return Array.from(this.users.values()).map((user) => ({ ...user }));
+  }
+
   /** Método auxiliar para testes */
   addUser(user: User): void {
     this.users.set(user.cpf, user);
   }
 }
+

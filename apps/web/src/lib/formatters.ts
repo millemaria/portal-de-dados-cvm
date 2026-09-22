@@ -99,3 +99,15 @@ export function formatCurrencyWithSuffix(
   if (abs >= 1e3) return `${sign}R$ ${(abs / 1e3).toFixed(1)} mil`;
   return brlFormatter.format(adjusted);
 }
+
+/**
+ * Formata o nome completo para exibir apenas o primeiro e último nome.
+ * Exemplo: "Jamille Maria Felix Barbosa" -> "Jamille Barbosa"
+ */
+export function formatShortName(fullName?: string | null): string {
+  if (!fullName) return "Administrador";
+  const parts = fullName.trim().split(/\s+/);
+  if (parts.length <= 1) return parts[0];
+  return `${parts[0]} ${parts[parts.length - 1]}`;
+}
+

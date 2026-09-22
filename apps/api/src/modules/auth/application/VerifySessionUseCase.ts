@@ -34,7 +34,9 @@ export class VerifySessionUseCase {
       cpf: user.cpf,
       email: user.email,
       role: user.role,
+      level: user.level,
       createdAt: user.createdAt,
     };
+
   }
 }

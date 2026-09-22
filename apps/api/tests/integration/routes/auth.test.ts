@@ -144,6 +144,129 @@ describe("Auth Routes (Integration)", () => {
     expect(meRes.statusCode).toBe(401);
   });
 
+  it("POST /api/auth/register-admin deve permitir que ADMIN_MASTER pré-cadastre um novo admin (201)", async () => {
+    // 1. Obter token do ADMIN_MASTER
+    const loginRes = await server.inject({
+      method: "POST",
+      url: "/api/auth/login",
+      payload: {
+        cpf: "111.444.777-35",
+        password: "Admin@123456",
+      },
+    });
+    const { token } = JSON.parse(loginRes.body).data;
+
+    // 2. Pré-cadastrar novo administrador com CPF válido
+    const registerRes = await server.inject({
+      method: "POST",
+      url: "/api/auth/register-admin",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+      payload: {
+        name: "Carlos Gestor CVM",
+        cpf: "529.982.247-25",
+        password: "Gestor@123456",
+        level: "ADMIN_GESTOR",
+        email: "carlos.gestor@cvm.gov.br",
+      },
+    });
+
+    expect(registerRes.statusCode).toBe(201);
+    const regBody = JSON.parse(registerRes.body);
+    expect(regBody.success).toBe(true);
+    expect(regBody.data.user.cpf).toBe("52998224725");
+    expect(regBody.data.user.level).toBe("ADMIN_GESTOR");
+
+    // 3. Fazer login com as credenciais do novo administrador pré-cadastrado
+    const newAdminLoginRes = await server.inject({
+      method: "POST",
+      url: "/api/auth/login",
+      payload: {
+        cpf: "52998224725",
+        password: "Gestor@123456",
+      },
+    });
+
+    expect(newAdminLoginRes.statusCode).toBe(200);
+    const newAdminLoginBody = JSON.parse(newAdminLoginRes.body);
+    expect(newAdminLoginBody.data.user.name).toBe("Carlos Gestor CVM");
+    expect(newAdminLoginBody.data.user.level).toBe("ADMIN_GESTOR");
+  });
+
+  it("POST /api/auth/register-admin deve retornar 409 se o CPF já estiver cadastrado", async () => {
+    const loginRes = await server.inject({
+      method: "POST",
+      url: "/api/auth/login",
+      payload: {
+        cpf: "111.444.777-35",
+        password: "Admin@123456",
+      },
+    });
+    const { token } = JSON.parse(loginRes.body).data;
+
+    const duplicateRes = await server.inject({
+      method: "POST",
+      url: "/api/auth/register-admin",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+      payload: {
+        name: "Duplicado Teste",
+        cpf: "111.444.777-35",
+        password: "QualquerSenha123",
+        level: "ADMIN_ANALISTA",
+      },
+    });
+
+    expect(duplicateRes.statusCode).toBe(409);
+    const body = JSON.parse(duplicateRes.body);
+    expect(body.error.code).toBe("CPF_ALREADY_EXISTS");
+  });
+
+  it("POST /api/auth/register-admin deve retornar 401 para requisições sem token", async () => {
+    const res = await server.inject({
+      method: "POST",
+      url: "/api/auth/register-admin",
+      payload: {
+        name: "Sem Auth",
+        cpf: "52998224725",
+        password: "QualquerSenha123",
+        level: "ADMIN_ANALISTA",
+      },
+    });
+
+    expect(res.statusCode).toBe(401);
+  });
+
+  it("GET /api/auth/admins deve listar todos os administradores cadastrados para usuário autenticado", async () => {
+    const loginRes = await server.inject({
+      method: "POST",
+      url: "/api/auth/login",
+      payload: {
+        cpf: "111.444.777-35",
+        password: "Admin@123456",
+      },
+    });
+    const { token } = JSON.parse(loginRes.body).data;
+
+    const listRes = await server.inject({
+      method: "GET",
+      url: "/api/auth/admins",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    expect(listRes.statusCode).toBe(200);
+    const body = JSON.parse(listRes.body);
+    expect(body.success).toBe(true);
+    expect(Array.isArray(body.data.admins)).toBe(true);
+    expect(body.data.admins.length).toBeGreaterThanOrEqual(1);
+    expect(body.data.admins[0].passwordHash).toBeUndefined();
+    expect(body.data.admins[0].salt).toBeUndefined();
+  });
+
   it("POST /api/auth/logout deve retornar 200 de confirmação", async () => {
     const logoutRes = await server.inject({
       method: "POST",
@@ -155,3 +278,4 @@ describe("Auth Routes (Integration)", () => {
     expect(body.success).toBe(true);
   });
 });
+

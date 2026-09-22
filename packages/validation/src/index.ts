@@ -17,8 +17,12 @@ export {
 
 export {
   loginSchema,
+  adminLevelSchema,
+  registerAdminSchema,
   validateCpf,
   normalizeCpf,
   formatCpf,
   type LoginInput,
+  type RegisterAdminInput,
 } from "./auth.js";
+
