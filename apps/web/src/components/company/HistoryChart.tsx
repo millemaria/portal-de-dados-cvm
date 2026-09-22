@@ -50,14 +50,14 @@ export function HistoryChart({
       initial={{ opacity: 0, y: 15 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3 }}
-      className="glass-card p-4 sm:p-6 min-w-0 border border-slate-800/90 rounded-2xl"
+      className="p-4 sm:p-5 min-w-0 border border-slate-800/90 bg-slate-900/60 rounded-xl"
     >
-      <div className="flex items-center justify-between mb-4 sm:mb-6">
-        <h3 className="text-sm sm:text-base font-bold text-white truncate">
+      <div className="flex items-center justify-between mb-4">
+        <h3 className="text-xs sm:text-sm font-semibold text-slate-200 truncate">
           {title}
         </h3>
         <span
-          className="w-2.5 h-2.5 rounded-full"
+          className="w-2 h-2 rounded-full"
           style={{ backgroundColor: color }}
         />
       </div>

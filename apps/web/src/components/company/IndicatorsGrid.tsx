@@ -111,20 +111,20 @@ export function IndicatorsGrid({ indicators }: IndicatorsGridProps) {
             initial={{ opacity: 0, y: 15 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.3, delay: i * 0.03 }}
-            className="glass-card p-4 sm:p-5 group min-w-0 flex flex-col justify-between border border-slate-800/90 bg-slate-900/80 hover:bg-slate-900 hover:border-cyan-500/50 transition-all rounded-2xl"
+            className="p-3.5 sm:p-4 min-w-0 flex flex-col justify-between border border-slate-800/90 bg-slate-900/60 hover:bg-slate-900/95 hover:border-slate-700 transition-colors rounded-lg"
           >
-            <div className="flex items-center justify-between mb-3">
-              <div className={`p-2.5 rounded-xl border ${card.bg}`}>
-                <card.icon className={`h-4 w-4 shrink-0 ${card.color}`} />
+            <div className="flex items-center justify-between mb-2.5">
+              <div className="p-1.5 rounded-md border border-slate-800 bg-slate-950/60 text-slate-400">
+                <card.icon className="h-3.5 w-3.5 shrink-0" />
               </div>
               {trend && (
                 <span
-                  className={`inline-flex items-center gap-1 text-xs font-semibold px-2 py-0.5 rounded-full shrink-0 ${
+                  className={`inline-flex items-center gap-1 text-[10px] font-mono font-medium px-1.5 py-0.5 rounded shrink-0 ${
                     trend === "up"
                       ? "text-emerald-400 bg-emerald-500/10 border border-emerald-500/25"
                       : trend === "down"
                         ? "text-rose-400 bg-rose-500/10 border border-rose-500/25"
-                        : "text-slate-400 bg-slate-800 border border-slate-700"
+                        : "text-slate-400 bg-slate-800/80 border border-slate-700/80"
                   }`}
                 >
                   {trend === "up" ? (
@@ -140,13 +140,13 @@ export function IndicatorsGrid({ indicators }: IndicatorsGridProps) {
             </div>
             <div>
               <p
-                className="text-xs text-slate-400 font-medium mb-1 truncate"
+                className="text-[11px] text-slate-400 font-medium mb-0.5 truncate"
                 title={card.label}
               >
                 {card.label}
               </p>
               <p
-                className="text-lg sm:text-xl font-black text-white tracking-tight truncate tabular-nums"
+                className="text-base sm:text-lg font-bold text-white tracking-tight truncate tabular-nums font-mono"
                 title={card.value}
               >
                 {card.value}

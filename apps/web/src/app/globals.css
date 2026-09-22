@@ -8,10 +8,10 @@
   --color-border: #1e293b;
   --color-border-hover: #334155;
 
-  --color-primary: #06b6d4;
-  --color-primary-hover: #22d3ee;
-  --color-secondary: #8b5cf6;
-  --color-secondary-hover: #a78bfa;
+  --color-primary: #2563eb;
+  --color-primary-hover: #3b82f6;
+  --color-secondary: #0284c7;
+  --color-secondary-hover: #38bdf8;
   --color-accent: #10b981;
   --color-danger: #ef4444;
   --color-warning: #f59e0b;
@@ -65,28 +65,26 @@ main {
   }
 }
 
-/* Glassmorphism Card */
+/* Institutional Terminal Card */
 .glass-card {
-  background: rgba(15, 23, 42, 0.75);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(51, 65, 85, 0.6);
-  border-radius: 1rem;
-  box-shadow: 0 4px 24px -2px rgba(0, 0, 0, 0.5);
-  transition: all 0.25s ease-out;
+  background: rgba(13, 20, 36, 0.7);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(30, 41, 59, 0.85);
+  border-radius: 0.875rem;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.3);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
 }
 
 .glass-card:hover {
-  border-color: rgba(6, 182, 212, 0.5);
-  box-shadow: 0 8px 30px -4px rgba(6, 182, 212, 0.18);
+  border-color: rgba(51, 65, 85, 0.9);
+  box-shadow: 0 6px 20px -2px rgba(0, 0, 0, 0.4);
 }
 
-/* Gradient Text */
+/* Clean Heading Emphasis */
 .gradient-text {
-  background: linear-gradient(135deg, #06b6d4 0%, #3b82f6 50%, #8b5cf6 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  color: #ffffff;
+  font-weight: 800;
 }
 
 /* Shimmer skeleton animation */

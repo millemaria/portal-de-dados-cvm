@@ -28,21 +28,18 @@ export function SearchBar({ variant = "hero", defaultValue = "" }: SearchBarProp
     <form onSubmit={handleSubmit} className="w-full">
       <div
         className={cn(
-          "flex items-center w-full transition-all duration-200",
+          "flex items-center w-full transition-colors duration-200",
           isHero
-            ? "h-14 sm:h-16 px-3.5 sm:px-5 gap-3 rounded-2xl border-2 border-slate-700/80 bg-slate-900/90 shadow-lg shadow-black/40"
-            : "h-10 px-3 gap-2.5 rounded-xl border border-slate-800 bg-slate-900/90",
-          isFocused &&
-            (isHero
-              ? "border-cyan-400 ring-4 ring-cyan-500/20 shadow-[0_0_25px_rgba(6,182,212,0.2)]"
-              : "border-cyan-500 ring-2 ring-cyan-500/20")
+            ? "h-13 sm:h-14 px-4 gap-3 rounded-lg border border-slate-800 bg-slate-900/95 shadow-sm hover:border-slate-700"
+            : "h-9.5 px-3 gap-2.5 rounded-lg border border-slate-800 bg-slate-900/90 hover:border-slate-700",
+          isFocused && "border-blue-500 ring-1 ring-blue-500/30"
         )}
       >
         <Search
           className={cn(
             "shrink-0 transition-colors pointer-events-none",
-            isHero ? "h-5 w-5 sm:h-6 sm:w-6" : "h-4 w-4",
-            isFocused ? "text-cyan-400" : "text-slate-400"
+            isHero ? "h-5 w-5" : "h-4 w-4",
+            isFocused ? "text-blue-400" : "text-slate-400"
           )}
         />
         <input
@@ -65,7 +62,7 @@ export function SearchBar({ variant = "hero", defaultValue = "" }: SearchBarProp
         {isHero && (
           <button
             type="submit"
-            className="shrink-0 rounded-xl bg-gradient-to-r from-cyan-500 via-blue-500 to-blue-600 px-4 sm:px-6 py-2 sm:py-2.5 text-xs sm:text-sm font-bold text-slate-950 hover:text-white transition-all shadow-md shadow-cyan-500/20 hover:shadow-cyan-500/40 active:scale-95 cursor-pointer whitespace-nowrap"
+            className="shrink-0 rounded-md bg-blue-600 hover:bg-blue-500 px-4 sm:px-5 py-2 text-xs sm:text-sm font-semibold text-white transition-colors active:scale-98 cursor-pointer whitespace-nowrap"
           >
             Buscar
           </button>

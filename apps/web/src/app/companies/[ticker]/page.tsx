@@ -71,7 +71,7 @@ export default async function CompanyPage({ params }: CompanyPageProps) {
         <div>
           <Link
             href="/"
-            className="inline-flex items-center gap-2 text-xs sm:text-sm font-semibold text-slate-400 hover:text-cyan-400 transition-colors px-3.5 py-2 rounded-xl bg-slate-900/80 border border-slate-800 hover:border-cyan-500/40 shadow-sm"
+            className="inline-flex items-center gap-2 text-xs sm:text-sm font-medium text-slate-400 hover:text-white transition-colors px-3 py-1.5 rounded-lg bg-slate-900/90 border border-slate-800 hover:border-slate-700 shadow-xs"
           >
             <ArrowLeft className="w-4 h-4" />
             <span>Voltar para todas as empresas</span>
@@ -84,7 +84,7 @@ export default async function CompanyPage({ params }: CompanyPageProps) {
         {/* Indicators */}
         {indicators?.data && indicators.data.length > 0 && (
           <section className="space-y-3">
-            <h2 className="text-lg sm:text-xl font-bold text-white tracking-tight">
+            <h2 className="text-base sm:text-lg font-bold text-white tracking-tight">
               Indicadores Financeiros
             </h2>
             <IndicatorsGrid indicators={indicators.data} />
@@ -94,7 +94,7 @@ export default async function CompanyPage({ params }: CompanyPageProps) {
         {/* Charts */}
         {revenueHistory.length > 1 && (
           <section className="space-y-3">
-            <h2 className="text-lg sm:text-xl font-bold text-white tracking-tight">
+            <h2 className="text-base sm:text-lg font-bold text-white tracking-tight">
               Histórico Financeiro Anual
             </h2>
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
@@ -102,14 +102,14 @@ export default async function CompanyPage({ params }: CompanyPageProps) {
                 title="Receita Líquida (Histórico)"
                 data={revenueHistory}
                 dataKey="netRevenue"
-                color="#06b6d4"
+                color="#3b82f6"
                 gradientId="revenueGradient"
               />
               <HistoryChart
                 title="Lucro Líquido (Histórico)"
                 data={netIncomeHistory}
                 dataKey="netIncome"
-                color="#8b5cf6"
+                color="#10b981"
                 gradientId="netIncomeGradient"
               />
             </div>

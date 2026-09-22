@@ -41,14 +41,14 @@ export function FinancialTable({
       initial={{ opacity: 0, y: 15 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3 }}
-      className="glass-card overflow-hidden border border-slate-800/90 rounded-2xl"
+      className="overflow-hidden border border-slate-800/90 bg-slate-900/60 rounded-xl"
     >
-      <div className="p-4 sm:p-5 border-b border-slate-800/90 bg-slate-900/50 flex items-center justify-between gap-3">
-        <h3 className="text-sm sm:text-base font-bold text-white truncate">
+      <div className="p-3.5 sm:p-4 border-b border-slate-800/90 bg-slate-900/80 flex items-center justify-between gap-3">
+        <h3 className="text-xs sm:text-sm font-bold text-white truncate">
           {title}
         </h3>
         {currencyScale && (
-          <span className="text-[11px] sm:text-xs font-mono font-medium text-slate-400 bg-slate-800/90 px-2.5 py-1 rounded-md border border-slate-700/80 shrink-0">
+          <span className="text-[11px] font-mono text-slate-400 bg-slate-950/80 px-2 py-0.5 rounded border border-slate-800 shrink-0">
             Escala: {currencyScale}
           </span>
         )}
@@ -69,9 +69,11 @@ export function FinancialTable({
               <button
                 type="button"
                 onClick={() => hasChildren && toggleAccount(item.accountCode)}
-                className={`w-full flex items-center justify-between px-3.5 sm:px-5 py-3 text-left transition-colors ${
+                className={`w-full flex items-center justify-between px-3.5 sm:px-4 py-2.5 text-left transition-colors ${
+                  item.level === 1 ? "bg-slate-900/30" : ""
+                } ${
                   hasChildren
-                    ? "hover:bg-slate-800/60 cursor-pointer"
+                    ? "hover:bg-slate-800/50 cursor-pointer"
                     : "cursor-default"
                 }`}
                 style={{
@@ -82,12 +84,12 @@ export function FinancialTable({
                 <div className="flex items-center gap-2 min-w-0 flex-1 mr-3 sm:mr-4">
                   {hasChildren ? (
                     isExpanded ? (
-                      <ChevronDown className="h-4 w-4 shrink-0 text-cyan-400" />
+                      <ChevronDown className="h-3.5 w-3.5 shrink-0 text-slate-300" />
                     ) : (
-                      <ChevronRight className="h-4 w-4 shrink-0 text-slate-400" />
+                      <ChevronRight className="h-3.5 w-3.5 shrink-0 text-slate-500" />
                     )
                   ) : (
-                    <span className="w-4 shrink-0" />
+                    <span className="w-3.5 shrink-0" />
                   )}
                   <span
                     className={`text-xs sm:text-sm flex items-center gap-2 min-w-0 ${
@@ -96,7 +98,7 @@ export function FinancialTable({
                         : "text-slate-300 font-medium"
                     }`}
                   >
-                    <span className="text-slate-400 text-[11px] sm:text-xs font-mono shrink-0">
+                    <span className="text-slate-400 text-[11px] font-mono shrink-0">
                       {item.accountCode}
                     </span>
                     <span className="truncate" title={item.accountDescription}>
@@ -107,7 +109,7 @@ export function FinancialTable({
                 <span
                   className={`text-xs sm:text-sm font-mono tabular-nums whitespace-nowrap shrink-0 text-right ${
                     item.value < 0
-                      ? "text-rose-400 font-bold"
+                      ? "text-rose-400 font-semibold"
                       : item.level === 1
                         ? "text-white font-bold"
                         : "text-slate-200"
@@ -124,20 +126,20 @@ export function FinancialTable({
                     initial={{ height: 0, opacity: 0 }}
                     animate={{ height: "auto", opacity: 1 }}
                     exit={{ height: 0, opacity: 0 }}
-                    transition={{ duration: 0.2 }}
-                    className="overflow-hidden bg-slate-950/40"
+                    transition={{ duration: 0.15 }}
+                    className="overflow-hidden bg-slate-950/30"
                   >
                     {children.map((child) => (
                       <div
                         key={child.accountCode}
-                        className="flex items-center justify-between px-3.5 sm:px-5 py-2 sm:py-2.5 border-t border-slate-800/40"
+                        className="flex items-center justify-between px-3.5 sm:px-4 py-2 border-t border-slate-850"
                         style={{
                           paddingLeft: `max(24px, ${(child.level - 1) * 14 + 24}px)`,
                           paddingRight: "16px",
                         }}
                       >
-                        <span className="text-[11px] sm:text-xs text-slate-400 flex items-center gap-2 min-w-0 flex-1 mr-3 sm:mr-4">
-                          <span className="font-mono text-[10px] sm:text-xs text-slate-400 shrink-0">
+                        <span className="text-[11px] text-slate-400 flex items-center gap-2 min-w-0 flex-1 mr-3 sm:mr-4">
+                          <span className="font-mono text-[10px] text-slate-500 shrink-0">
                             {child.accountCode}
                           </span>
                           <span className="truncate" title={child.accountDescription}>
@@ -145,7 +147,7 @@ export function FinancialTable({
                           </span>
                         </span>
                         <span
-                          className={`text-[11px] sm:text-xs font-mono tabular-nums whitespace-nowrap shrink-0 text-right ${
+                          className={`text-[11px] font-mono tabular-nums whitespace-nowrap shrink-0 text-right ${
                             child.value < 0
                               ? "text-rose-400"
                               : "text-slate-300"

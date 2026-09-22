@@ -3,7 +3,7 @@ import Link from "next/link";
 import { SearchBar } from "@/components/layout/SearchBar";
 import { CompanyResults } from "./CompanyResults";
 import { SkeletonCard } from "@/components/shared/LoadingSpinner";
-import { TrendingUp, Sparkles, Flame } from "lucide-react";
+import { TrendingUp } from "lucide-react";
 
 interface HomePageProps {
   searchParams: Promise<{ search?: string; page?: string }>;
@@ -33,28 +33,24 @@ export default async function HomePage({ searchParams }: HomePageProps) {
     <div className="w-full">
       {/* Centered page container */}
       <div className="page-container relative w-full max-w-[1440px] mx-auto px-6 lg:px-8 py-8 sm:py-12 lg:py-16">
-        {/* Background ambient lighting */}
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-4xl h-96 bg-gradient-to-r from-cyan-500/15 via-blue-500/10 to-purple-500/15 blur-3xl rounded-full pointer-events-none -z-10 opacity-70" />
-
         {/* Hero Section */}
         {!search && (
-          <section className="flex flex-col items-center justify-center text-center py-6 sm:py-12 max-w-3xl mx-auto w-full mb-16 sm:mb-20">
-            {/* Badge */}
-            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-cyan-500/10 border border-cyan-500/30 text-cyan-400 text-xs font-semibold tracking-wide uppercase mb-6 shadow-[0_0_20px_rgba(6,182,212,0.15)]">
-              <Sparkles className="w-3.5 h-3.5" />
-              <span>Dados Oficiais • CVM & B3</span>
+          <section className="flex flex-col items-center justify-center text-center py-6 sm:py-10 max-w-3xl mx-auto w-full mb-12 sm:mb-16">
+            {/* Institutional Tag */}
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-slate-900/90 border border-slate-800 text-slate-300 text-xs font-mono mb-5 shadow-xs">
+              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+              <span>Base Regulamentar • CVM & B3</span>
             </div>
 
             {/* Title */}
-            <h1 className="text-3xl sm:text-5xl lg:text-6xl font-black tracking-tight text-white mb-5 leading-tight text-center">
-              Dados Financeiros de{" "}
-              <span className="gradient-text">Companhias Abertas</span>
+            <h1 className="text-3xl sm:text-5xl font-black tracking-tight text-white mb-4 leading-tight text-center">
+              Dados Financeiros de Companhias Abertas
             </h1>
 
             {/* Subtitle */}
-            <p className="text-sm sm:text-base lg:text-lg text-slate-400 max-w-2xl mx-auto mb-8 leading-relaxed text-center px-2">
-              Consulte demonstrações financeiras completas, balanço patrimonial, DRE,
-              fluxo de caixa e múltiplos de mercado direto da CVM.
+            <p className="text-sm sm:text-base text-slate-400 max-w-2xl mx-auto mb-8 leading-relaxed text-center px-2">
+              Demonstrações financeiras padronizadas (DFP/ITR), balanços patrimoniais, DRE,
+              fluxos de caixa e indicadores de mercado auditados pela CVM.
             </p>
 
             {/* SearchBar Container */}
@@ -63,19 +59,17 @@ export default async function HomePage({ searchParams }: HomePageProps) {
             </div>
 
             {/* Quick Pills */}
-            <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-2.5 max-w-2xl mx-auto px-2">
-              <div className="inline-flex items-center gap-1.5 text-xs text-slate-400 font-semibold mr-1">
-                <Flame className="w-3.5 h-3.5 text-cyan-400" />
-                <span>Mais buscadas:</span>
-              </div>
+            <div className="flex flex-wrap items-center justify-center gap-2 max-w-2xl mx-auto px-2">
+              <span className="text-[11px] uppercase tracking-wider font-semibold text-slate-500 mr-1">
+                Tickers frequentes:
+              </span>
               {POPULAR_TICKERS.map((t) => (
                 <Link
                   key={t.ticker}
                   href={`/companies/${t.ticker}`}
-                  className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-900/90 border border-slate-700/80 hover:border-cyan-400 hover:bg-slate-800 text-slate-200 hover:text-cyan-300 transition-all font-mono text-xs shadow-sm hover:scale-105 active:scale-95 cursor-pointer"
+                  className="inline-flex items-center px-2.5 py-1 rounded-md bg-slate-900/90 border border-slate-800 hover:border-slate-600 hover:bg-slate-800 text-slate-300 hover:text-white transition-colors font-mono text-xs cursor-pointer"
                   title={t.name}
                 >
-                  <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 shadow-[0_0_6px_#06b6d4]" />
                   {t.ticker}
                 </Link>
               ))}
@@ -122,9 +116,9 @@ export default async function HomePage({ searchParams }: HomePageProps) {
         {!search && (
           <section className="w-full">
             <div className="flex items-center justify-between mb-8 pb-4 border-b border-slate-800/80">
-              <div className="flex items-center gap-3.5">
-                <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-cyan-500/20 to-blue-500/20 text-cyan-400 border border-cyan-500/30 shadow-[0_0_15px_rgba(6,182,212,0.15)]">
-                  <TrendingUp className="w-5 h-5" />
+              <div className="flex items-center gap-3">
+                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-slate-900 text-slate-300 border border-slate-800">
+                  <TrendingUp className="w-5 h-5 text-blue-400" />
                 </div>
                 <div>
                   <h2 className="text-xl sm:text-2xl font-bold text-white tracking-tight">

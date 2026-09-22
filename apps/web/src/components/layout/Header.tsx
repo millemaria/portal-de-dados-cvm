@@ -34,11 +34,12 @@ export function Header() {
             href={isLoginPage ? "/login" : "/"}
             className="flex items-center gap-2.5 shrink-0 group"
           >
-            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-cyan-500 to-blue-600 shadow-md shadow-cyan-500/20 group-hover:shadow-cyan-500/40 transition-all duration-300 group-hover:scale-105">
-              <Activity className="w-5 h-5 text-slate-950 stroke-[2.5]" />
+            <div className="flex h-8 w-8 items-center justify-center rounded-md bg-slate-900 border border-slate-800 text-blue-400 group-hover:border-slate-700 transition-colors">
+              <Activity className="w-4 h-4 stroke-[2.2]" />
             </div>
-            <span className="text-base sm:text-lg font-extrabold tracking-tight text-white flex items-center gap-1">
-              Portal <span className="gradient-text font-black">CVM</span>
+            <span className="text-sm sm:text-base font-bold tracking-tight text-white flex items-center gap-1.5">
+              <span>Portal de Dados</span>
+              <span className="px-1.5 py-0.5 rounded bg-blue-500/10 border border-blue-500/20 text-blue-400 font-mono text-xs font-semibold">CVM</span>
             </span>
           </Link>
 
@@ -55,14 +56,14 @@ export function Header() {
               <>
                 <Link
                   href="/"
-                  className="text-xs sm:text-sm font-bold text-slate-300 hover:text-cyan-400 transition-colors px-3 py-1.5 rounded-xl hover:bg-slate-900 border border-transparent hover:border-slate-800"
+                  className="text-xs sm:text-sm font-medium text-slate-400 hover:text-white transition-colors px-2.5 py-1.5 rounded-md hover:bg-slate-900"
                 >
                   Início
                 </Link>
 
                 {/* Badge do Administrador */}
-                <div className="hidden md:inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-cyan-500/10 border border-cyan-500/30 text-cyan-400 text-xs font-semibold">
-                  <ShieldCheck className="w-3.5 h-3.5" />
+                <div className="hidden md:inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-slate-900 border border-slate-800 text-slate-300 text-xs font-mono">
+                  <ShieldCheck className="w-3.5 h-3.5 text-blue-400" />
                   <span>{adminUser?.name || "Administrador"}</span>
                 </div>
 
@@ -71,15 +72,15 @@ export function Header() {
                   type="button"
                   onClick={() => logoutAdmin()}
                   title="Encerrar sessão administrativa"
-                  className="inline-flex items-center gap-1.5 text-xs sm:text-sm font-bold text-rose-400 hover:text-rose-300 transition-colors px-3 py-1.5 rounded-xl hover:bg-rose-500/10 border border-transparent hover:border-rose-500/20 cursor-pointer"
+                  className="inline-flex items-center gap-1.5 text-xs sm:text-sm font-medium text-slate-400 hover:text-rose-400 transition-colors px-2.5 py-1.5 rounded-md hover:bg-rose-500/10 cursor-pointer"
                 >
                   <LogOut className="w-3.5 h-3.5" />
                   <span className="hidden sm:inline">Sair</span>
                 </button>
               </>
             ) : (
-              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-900 border border-slate-800 text-slate-400 text-xs font-medium">
-                <ShieldCheck className="w-3.5 h-3.5 text-cyan-400" />
+              <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-slate-900 border border-slate-800 text-slate-400 text-xs font-mono">
+                <ShieldCheck className="w-3.5 h-3.5 text-blue-400" />
                 <span>Ambiente Seguro</span>
               </div>
             )}

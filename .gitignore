@@ -74,3 +74,6 @@ next-env.d.ts
 plugins/
 .plugins/
 *.plugin
+
+# Agents
+.agents/
